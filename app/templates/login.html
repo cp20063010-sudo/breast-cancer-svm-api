@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - LIMS & R&D Botanical</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Họa tiết Zigzag nền */
+            background-color: #f6f5f5;
+            background-image: linear-gradient(135deg, rgba(230,230,230,0.5) 25%, transparent 25%), 
+                              linear-gradient(225deg, rgba(230,230,230,0.5) 25%, transparent 25%), 
+                              linear-gradient(45deg, rgba(230,230,230,0.5) 25%, transparent 25%), 
+                              linear-gradient(315deg, rgba(230,230,230,0.5) 25%, #f6f5f5 25%);
+            background-position: 15px 0, 15px 0, 0 0, 0 0;
+            background-size: 30px 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 25px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            background: #ffe8ee;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            font-size: 2.5rem;
+            box-shadow: inset 0 0 10px rgba(255,182,193,0.3);
+            border: 3px solid white;
+            outline: 2px solid #ffccd5;
+        }
+
+        .title { color: #4a4a4a; font-weight: 800; margin-bottom: 0.2rem; font-size: 1.6rem; }
+        .subtitle { color: #9c9c9c; font-size: 0.85rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: 0.5px; }
+
+        .form-control {
+            background-color: #eef3ff;
+            border: none;
+            border-radius: 12px;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            color: #4a4a4a;
+            font-weight: 500;
+        }
+        .form-control:focus {
+            background-color: #e4ebfa;
+            box-shadow: none;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            border: none;
+            border-radius: 15px;
+            color: #5a3c42;
+            font-weight: 700;
+            padding: 0.85rem;
+            width: 100%;
+            margin-top: 0.5rem;
+            transition: opacity 0.2s;
+        }
+        .btn-login:hover { opacity: 0.9; color: #5a3c42; }
+
+        .footer-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .footer-links a { text-decoration: none; color: #ff758c; }
+        
+        .decorations {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 2rem;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-box">🌸</div>
+        <h2 class="title">Đăng Nhập</h2>
+        <div class="subtitle">Hệ thống LIMS & R&D Botanical</div>
+
+        {% if error == 1 %}
+        <div class="alert alert-danger" style="border-radius: 10px; font-size: 0.85rem; padding: 0.5rem;">
+            Sai tài khoản hoặc mật khẩu!
+        </div>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <input type="text" name="username" class="form-control" placeholder="Tên đăng nhập (Thử: bin)" required>
+            <input type="password" name="password" class="form-control" placeholder="Mật khẩu (Thử: 1234)" required>
+            <button type="submit" class="btn btn-login">Đăng Nhập 🚀</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="#">Tạo tài khoản</a>
+            <a href="#">Quên mật khẩu?</a>
+        </div>
+    </div>
+
+    <div class="decorations">
+        🐈 &nbsp;&nbsp;&nbsp; 🐇
+    </div>
+
+</body>
+</html>
