@@ -1,9 +1,10 @@
 from pathlib import Path
 import json, joblib, numpy as np
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-# 1. Nạp đường dẫn và mô hình từ thư mục artifacts
+# Nạp cấu hình và mô hình
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = BASE_DIR / "artifacts/breast_cancer_svm.joblib"
 META_PATH = BASE_DIR / "artifacts/metadata.json"
@@ -17,7 +18,9 @@ app = FastAPI(
     description="Educational demonstration only"
 )
 
-# 2. Khai báo cấu trúc dữ liệu đầu vào và đầu ra
+# Khai báo thư mục chứa file giao diện web HTML
+templates = Jinja2Templates(directory="app/templates")
+
 class PredictionRequest(BaseModel):
     features: dict[str, float] = Field(..., description="Exactly 30 named numeric features")
 
@@ -29,7 +32,6 @@ class PredictionResponse(BaseModel):
     model_version: str
     warning: str
 
-# 3. Hàm kiểm tra nghiêm ngặt 30 đặc trưng đầu vào
 def build_vector(payload: PredictionRequest) -> np.ndarray:
     expected = metadata["feature_names"]
     received = set(payload.features)
@@ -44,10 +46,14 @@ def build_vector(payload: PredictionRequest) -> np.ndarray:
         raise HTTPException(422, "Features must be finite numbers")
     return values
 
-# 4. Các đường dẫn (endpoints) của API
+# Endpoint trang chủ: Trả về giao diện web thay vì văn bản
 @app.get("/")
-def root():
-    return {"service": "Breast Cancer SVM API", "docs": "/docs", "warning": metadata["warning"]}
+def root(request: Request):
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "feature_names": metadata["feature_names"],
+        "warning": metadata["warning"]
+    })
 
 @app.get("/health")
 def health():
