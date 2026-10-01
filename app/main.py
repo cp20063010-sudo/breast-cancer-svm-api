@@ -1,6 +1,7 @@
 from pathlib import Path
 import json, joblib, numpy as np
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Form, Response
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
@@ -13,12 +14,11 @@ model = joblib.load(MODEL_PATH)
 metadata = json.loads(META_PATH.read_text(encoding="utf-8"))
 
 app = FastAPI(
-    title="Breast Cancer SVM API",
+    title="LIMS & R&D Botanical API",
     version=metadata["model_version"],
-    description="Educational demonstration only"
+    description="Hệ thống QC Nhận diện và Phân tích"
 )
 
-# Khai báo thư mục chứa file giao diện web HTML
 templates = Jinja2Templates(directory="app/templates")
 
 class PredictionRequest(BaseModel):
@@ -35,50 +35,58 @@ class PredictionResponse(BaseModel):
 def build_vector(payload: PredictionRequest) -> np.ndarray:
     expected = metadata["feature_names"]
     received = set(payload.features)
-    missing = sorted(set(expected) - received)
-    extra = sorted(received - set(expected))
-    
-    if missing or extra:
-        raise HTTPException(status_code=422, detail={"missing": missing, "extra": extra})
-        
-    values = np.array([[payload.features[name] for name in expected]], dtype=float)
-    if not np.isfinite(values).all():
-        raise HTTPException(422, "Features must be finite numbers")
-    return values
+    if sorted(set(expected) - received) or sorted(received - set(expected)):
+        raise HTTPException(status_code=422, detail="Sai cấu trúc đặc trưng")
+    return np.array([[payload.features[name] for name in expected]], dtype=float)
 
-# Endpoint trang chủ: Trả về giao diện web thay vì văn bản
+# 1. Giao diện Đăng nhập
+@app.get("/login")
+def login_page(request: Request, error: int = 0):
+    return templates.TemplateResponse("login.html", {"request": request, "error": error})
+
+# 2. Xử lý Đăng nhập & Cấp quyền
+@app.post("/login")
+def login_process(username: str = Form(...), password: str = Form(...)):
+    if username == "bin" and password == "1234":
+        response = RedirectResponse(url="/", status_code=303)
+        response.set_cookie(key="lims_session", value="authenticated", httponly=True)
+        return response
+    return RedirectResponse(url="/login?error=1", status_code=303)
+
+# 3. Đăng xuất
+@app.get("/logout")
+def logout():
+    response = RedirectResponse(url="/login", status_code=303)
+    response.delete_cookie("lims_session")
+    return response
+
+# 4. Trang chủ (Đã khóa bảo mật)
 @app.get("/")
 def root(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={
-            "feature_names": metadata["feature_names"],
-            "warning": metadata["warning"]
-        }
-    )
+    if not request.cookies.get("lims_session"):
+        return RedirectResponse(url="/login")
+        
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "feature_names": metadata["feature_names"],
+        "warning": metadata["warning"]
+    })
 
+# Giữ nguyên các endpoint API
 @app.get("/health")
-def health():
-    return {"status": "ok", "model_loaded": model is not None, "model_version": metadata["model_version"]}
+def health(): return {"status": "ok"}
 
 @app.get("/metadata")
-def get_metadata():
-    return metadata
+def get_metadata(): return metadata
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(payload: PredictionRequest):
     x = build_vector(payload)
     predicted_class = int(model.predict(x)[0])
-    probabilities = model.predict_proba(x)[0]
-    classes = list(model.named_steps["svc"].classes_)
-    p = {int(c): float(v) for c, v in zip(classes, probabilities)}
-    
+    p = {int(c): float(v) for c, v in zip(list(model.named_steps["svc"].classes_), model.predict_proba(x)[0])}
     return PredictionResponse(
         predicted_class=predicted_class,
         predicted_label=metadata["class_mapping"][str(predicted_class)],
-        probability_malignant=p[0],
-        probability_benign=p[1],
-        model_version=metadata["model_version"],
-        warning=metadata["warning"]
+        probability_malignant=p[0], probability_benign=p[1],
+        model_version=metadata["model_version"], warning=metadata["warning"]
     )
