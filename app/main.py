@@ -49,11 +49,14 @@ def build_vector(payload: PredictionRequest) -> np.ndarray:
 # Endpoint trang chủ: Trả về giao diện web thay vì văn bản
 @app.get("/")
 def root(request: Request):
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "feature_names": metadata["feature_names"],
-        "warning": metadata["warning"]
-    })
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "feature_names": metadata["feature_names"],
+            "warning": metadata["warning"]
+        }
+    )
 
 @app.get("/health")
 def health():
