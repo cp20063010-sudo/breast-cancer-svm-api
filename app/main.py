@@ -1,11 +1,10 @@
 from pathlib import Path
 import json, joblib, numpy as np
-from fastapi import FastAPI, HTTPException, Request, Form, Response
+from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
-# Nạp cấu hình và mô hình
 BASE_DIR = Path(__file__).resolve().parents[1]
 MODEL_PATH = BASE_DIR / "artifacts/breast_cancer_svm.joblib"
 META_PATH = BASE_DIR / "artifacts/metadata.json"
@@ -39,21 +38,15 @@ def build_vector(payload: PredictionRequest) -> np.ndarray:
         raise HTTPException(status_code=422, detail="Sai cấu trúc đặc trưng")
     return np.array([[payload.features[name] for name in expected]], dtype=float)
 
-# 1. Giao diện Đăng nhập
 @app.get("/login")
 def login_page(request: Request, error: int = 0):
-    return templates.TemplateResponse("login.html", {"request": request, "error": error})
-
-# 1. Giao diện Đăng nhập
-@app.get("/login")
-def login_page(request: Request, error: int = 0):
+    # Đã sửa lại cú pháp chuẩn cho FastAPI mới nhất
     return templates.TemplateResponse(
-        request=request,
-        name="login.html",
+        request=request, 
+        name="login.html", 
         context={"error": error}
     )
 
-# 2. Xử lý Đăng nhập & Cấp quyền (Giữ nguyên)
 @app.post("/login")
 def login_process(username: str = Form(...), password: str = Form(...)):
     if username == "bin" and password == "1234":
@@ -62,28 +55,27 @@ def login_process(username: str = Form(...), password: str = Form(...)):
         return response
     return RedirectResponse(url="/login?error=1", status_code=303)
 
-# 3. Đăng xuất (Giữ nguyên)
 @app.get("/logout")
 def logout():
     response = RedirectResponse(url="/login", status_code=303)
     response.delete_cookie("lims_session")
     return response
 
-# 4. Trang chủ (Đã khóa bảo mật)
 @app.get("/")
 def root(request: Request):
     if not request.cookies.get("lims_session"):
         return RedirectResponse(url="/login")
         
+    # Đã sửa lại cú pháp chuẩn cho FastAPI mới nhất
     return templates.TemplateResponse(
-        request=request,
-        name="index.html",
+        request=request, 
+        name="index.html", 
         context={
             "feature_names": metadata["feature_names"],
             "warning": metadata["warning"]
         }
     )
-# Giữ nguyên các endpoint API
+
 @app.get("/health")
 def health(): return {"status": "ok"}
 
