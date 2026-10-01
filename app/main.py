@@ -44,7 +44,16 @@ def build_vector(payload: PredictionRequest) -> np.ndarray:
 def login_page(request: Request, error: int = 0):
     return templates.TemplateResponse("login.html", {"request": request, "error": error})
 
-# 2. Xử lý Đăng nhập & Cấp quyền
+# 1. Giao diện Đăng nhập
+@app.get("/login")
+def login_page(request: Request, error: int = 0):
+    return templates.TemplateResponse(
+        request=request,
+        name="login.html",
+        context={"error": error}
+    )
+
+# 2. Xử lý Đăng nhập & Cấp quyền (Giữ nguyên)
 @app.post("/login")
 def login_process(username: str = Form(...), password: str = Form(...)):
     if username == "bin" and password == "1234":
@@ -53,7 +62,7 @@ def login_process(username: str = Form(...), password: str = Form(...)):
         return response
     return RedirectResponse(url="/login?error=1", status_code=303)
 
-# 3. Đăng xuất
+# 3. Đăng xuất (Giữ nguyên)
 @app.get("/logout")
 def logout():
     response = RedirectResponse(url="/login", status_code=303)
@@ -66,12 +75,14 @@ def root(request: Request):
     if not request.cookies.get("lims_session"):
         return RedirectResponse(url="/login")
         
-    return templates.TemplateResponse("index.html", {
-        "request": request,
-        "feature_names": metadata["feature_names"],
-        "warning": metadata["warning"]
-    })
-
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "feature_names": metadata["feature_names"],
+            "warning": metadata["warning"]
+        }
+    )
 # Giữ nguyên các endpoint API
 @app.get("/health")
 def health(): return {"status": "ok"}
