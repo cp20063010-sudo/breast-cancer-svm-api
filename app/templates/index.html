@@ -15,18 +15,14 @@
             justify-content: center;
             background: linear-gradient(135deg, #005f73 0%, #0a9396 50%, #8cb369 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; /* Ẩn các phần thừa của icon khi bay ra ngoài */
+            overflow: hidden; 
             position: relative;
         }
 
-        /* --- HIỆU ỨNG ĐỘNG 1: Các Icon Y khoa trôi nổi (Floating Icons) --- */
+        /* Hiệu ứng Icon bay */
         .floating-icon {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.3;
-            animation: floatUp linear infinite;
-            user-select: none;
-            pointer-events: none;
+            position: absolute; font-size: 2rem; opacity: 0.3;
+            animation: floatUp linear infinite; user-select: none; pointer-events: none;
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         @keyframes floatUp {
@@ -35,45 +31,28 @@
             80% { opacity: 0.6; }
             100% { transform: translateY(-20vh) rotate(360deg) scale(1.3); opacity: 0; }
         }
-        /* Cấu hình tốc độ và vị trí riêng cho từng icon */
-        .icon-1 { left: 10%; animation-duration: 12s; animation-delay: 0s; font-size: 2.8rem; }
+        .icon-1 { left: 10%; animation-duration: 12s; font-size: 2.8rem; }
         .icon-2 { left: 25%; animation-duration: 16s; animation-delay: 2s; font-size: 2rem; }
         .icon-3 { left: 45%; animation-duration: 10s; animation-delay: 5s; font-size: 3.5rem; }
         .icon-4 { left: 65%; animation-duration: 14s; animation-delay: 1s; font-size: 2.5rem; }
         .icon-5 { left: 80%; animation-duration: 18s; animation-delay: 4s; font-size: 2.2rem; }
         .icon-6 { left: 90%; animation-duration: 11s; animation-delay: 3s; font-size: 3rem; }
 
-        /* --- HIỆU ỨNG ĐỘNG 2: Khung Đăng Nhập Glassmorphism xuất hiện --- */
+        /* Khung Đăng Nhập Glassmorphism */
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            text-align: center;
-            z-index: 10;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+            border-radius: 20px; padding: 3rem 2.5rem; width: 100%; max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; z-index: 10;
             border: 1px solid rgba(255, 255, 255, 0.6);
             animation: popIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        /* --- HIỆU ỨNG ĐỘNG 3: Logo rung đập như nhịp tim (Pulse) --- */
+        /* Logo rung đập (Pulse) */
         .logo-box {
-            width: 85px;
-            height: 85px;
-            background: #eef2f5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem auto;
-            font-size: 2.8rem;
-            border: 4px solid white;
+            width: 85px; height: 85px; background: #eef2f5; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem auto; font-size: 2.8rem; border: 4px solid white;
             animation: pulseHeartbeat 2s infinite alternate;
         }
         @keyframes pulseHeartbeat {
@@ -86,41 +65,23 @@
 
         /* Form nhập liệu */
         .form-control {
-            background-color: #f4f6f9;
-            border: 2px solid #cbd5e1;
-            border-radius: 10px;
-            padding: 0.9rem 1.2rem;
-            margin-bottom: 1.2rem;
-            color: #2b2b2b;
-            font-weight: 700;
-            transition: 0.3s;
+            background-color: #f4f6f9; border: 2px solid #cbd5e1; border-radius: 10px;
+            padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; color: #2b2b2b; font-weight: 700; transition: 0.3s;
         }
-        .form-control:focus {
-            background-color: white;
-            border-color: #0a9396;
-            box-shadow: 0 0 0 4px rgba(10, 147, 150, 0.15);
-        }
+        .form-control:focus { background-color: white; border-color: #0a9396; box-shadow: 0 0 0 4px rgba(10, 147, 150, 0.15); }
 
-        /* --- HIỆU ỨNG ĐỘNG 4: Nút bấm có luồng sáng quét qua --- */
+        /* Nút bấm luồng sáng */
         .btn-login {
             background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 900;
-            padding: 1rem;
-            width: 100%;
-            letter-spacing: 1.5px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
+            border: none; border-radius: 12px; color: white; font-weight: 900;
+            padding: 1rem; width: 100%; letter-spacing: 1.5px; transition: 0.3s;
+            position: relative; overflow: hidden;
         }
         .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(10, 147, 150, 0.5); color: white; }
         .btn-login::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg);
-            animation: sweepLight 3s infinite;
+            transform: skewX(-25deg); animation: sweepLight 3s infinite;
         }
         @keyframes sweepLight { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
 
@@ -129,7 +90,6 @@
 </head>
 <body>
 
-    <!-- Đội hình Icon Y Khoa bay lơ lửng trong nền -->
     <div class="floating-icon icon-1">🧬</div>
     <div class="floating-icon icon-2">💊</div>
     <div class="floating-icon icon-3">🔬</div>
@@ -138,28 +98,54 @@
     <div class="floating-icon icon-6">🧪</div>
 
     <div class="login-card">
-        <!-- Logo Bệnh viện nhấp nháy -->
         <div class="logo-box">🏥</div>
-        
         <h2 class="title">LIMS CLINICAL</h2>
         <div class="subtitle">Phòng Thí Nghiệm & Phân Tích Y Khoa</div>
 
-        {% if error == 1 %}
-        <div class="alert alert-danger fw-bold" style="border-radius: 10px; font-size: 0.85rem; padding: 0.7rem; box-shadow: 0 4px 10px rgba(220,53,69,0.2);">
-            ⚠️ Mã định danh hoặc bảo mật không hợp lệ!
+        <!-- Khung báo lỗi ẩn mặc định -->
+        <div id="errorAlert" class="alert alert-danger fw-bold d-none" style="border-radius: 10px; font-size: 0.85rem; padding: 0.7rem; box-shadow: 0 4px 10px rgba(220,53,69,0.2);">
+            ⚠️ Mã định danh hoặc mật mã không hợp lệ!
         </div>
-        {% endif %}
 
-        <form action="/login" method="POST">
-            <input type="text" name="username" class="form-control" placeholder="Mã Y tế (Thử: bin)" required>
-            <input type="password" name="password" class="form-control" placeholder="Mật mã (Thử: 1234)" required>
-            <button type="submit" class="btn btn-login">TRUY CẬP HỆ THỐNG 🔐</button>
+        <!-- Form sử dụng JavaScript thay vì gửi Action trực tiếp -->
+        <form id="secureLoginForm">
+            <input type="text" id="username" class="form-control" placeholder="Mã Y tế (Thử: bin)" required>
+            <input type="password" id="password" class="form-control" placeholder="Mật mã (Thử: 1234)" required>
+            <button type="submit" id="loginBtn" class="btn btn-login">TRUY CẬP HỆ THỐNG 🔐</button>
         </form>
 
-        <div class="hospital-footer">
-            Bảo mật cấp độ phòng Lab 🛡️
-        </div>
+        <div class="hospital-footer">Bảo mật cấp độ phòng Lab 🛡️</div>
     </div>
 
+    <script>
+        document.getElementById('secureLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Ngăn trình duyệt tự tải lại trang
+            
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const alertBox = document.getElementById('errorAlert');
+
+            // Ẩn lỗi cũ và đổi trạng thái nút
+            alertBox.classList.add('d-none');
+            btn.innerHTML = "ĐANG XÁC THỰC... ⏳";
+            btn.style.opacity = "0.8";
+
+            // Giả lập thời gian kết nối máy chủ 0.8 giây
+            setTimeout(() => {
+                if (user === 'bin' && pass === '1234') {
+                    // Cấp thẻ an ninh (Cookie) trực tiếp qua trình duyệt
+                    document.cookie = "lims_session=authenticated; path=/; max-age=86400";
+                    // Mở khóa chuyển thẳng vào Dashboard bệnh viện
+                    window.location.href = "/";
+                } else {
+                    // Xử lý khi sai mật khẩu
+                    alertBox.classList.remove('d-none');
+                    btn.innerHTML = "TRUY CẬP HỆ THỐNG 🔐";
+                    btn.style.opacity = "1";
+                }
+            }, 800);
+        });
+    </script>
 </body>
 </html>
