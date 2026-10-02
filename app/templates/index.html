@@ -1,239 +1,232 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ thống Y khoa LIMS</title>
+    <title>LIMS - Y Khoa & Dược Lý</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Thư viện hỗ trợ xuất file PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        /* Hệ màu Phyto-Medical (Sáng/Tối) */
         :root {
-            --med-primary: #005f73;
+            --med-primary: #005f73; /* Xanh y tế */
             --med-secondary: #0a9396;
-            --med-accent: #94d2bd;
-            --med-bg: #eef2f5;
-            --med-card: #ffffff;
-            --med-danger: #ae2012;
-            --med-success: #198754;
+            --phyto-accent: #8cb369; /* Xanh bơ */
+            --bg-color: #f5f9f1;
+            --card-bg: #ffffff;
+            --text-main: #2b2b2b;
+            --border-color: #e0e6ed;
+            --input-bg: #f8fafc;
+        }
+        [data-theme="dark"] {
+            --med-primary: #8cb369; /* Đổi màu chính thành Xanh bơ phát sáng */
+            --med-secondary: #00ffcc;
+            --phyto-accent: #0a9396;
+            --bg-color: #121418;
+            --card-bg: #1e2126;
+            --text-main: #e0e6ed;
+            --border-color: #2d333b;
+            --input-bg: #121418;
         }
 
         body {
-            background-color: var(--med-bg);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             font-family: 'Segoe UI', system-ui, sans-serif;
-            color: #2b2b2b;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* Thanh điều hướng HIS */
+        /* Navbar */
         .his-navbar {
-            background: var(--med-primary);
+            background: var(--card-bg);
             padding: 0.8rem 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-bottom: 4px solid var(--med-secondary);
-        }
-        .his-nav-btn {
-            background: transparent;
-            color: rgba(255,255,255,0.7);
-            border: none;
-            padding: 0.6rem 1.2rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            margin-right: 10px;
-        }
-        .his-nav-btn:hover { color: white; background: rgba(255,255,255,0.1); }
-        .his-nav-btn.active { color: white; background: var(--med-secondary); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-        .nav-brand { color: white; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; }
-
-        /* Khung Card Y tế */
-        .med-card {
-            background: var(--med-card);
-            border-radius: 12px;
-            border: 1px solid #e0e6ed;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.03);
-            padding: 1.5rem;
-            height: 100%;
-            transition: transform 0.3s;
-        }
-        .card-header-med {
-            border-bottom: 2px solid var(--med-bg);
-            padding-bottom: 1rem;
-            margin-bottom: 1.2rem;
-            font-weight: 700;
-            color: var(--med-primary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--phyto-accent);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: 0.4s;
         }
-
-        /* Animations */
-        .tab-content { display: none; animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .tab-content.active { display: block; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-brand { font-weight: 900; color: var(--med-primary); letter-spacing: 1px; font-size: 1.2rem; }
+        .his-nav-btn {
+            background: transparent; color: var(--text-main); border: none;
+            padding: 0.6rem 1rem; font-weight: 700; border-radius: 8px; transition: 0.3s;
+        }
+        .his-nav-btn:hover { background: rgba(140, 179, 105, 0.1); color: var(--phyto-accent); }
+        .his-nav-btn.active { background: var(--med-primary); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         
-        @keyframes pulseAlert { 
-            0% { box-shadow: 0 0 0 0 rgba(174, 32, 18, 0.4); } 
-            70% { box-shadow: 0 0 0 15px rgba(174, 32, 18, 0); } 
-            100% { box-shadow: 0 0 0 0 rgba(174, 32, 18, 0); } 
+        /* Dark Mode Toggle */
+        .theme-toggle {
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            color: var(--text-main); border-radius: 20px; padding: 0.4rem 1rem;
+            font-weight: 700; cursor: pointer; transition: 0.3s;
         }
-        .danger-pulse { animation: pulseAlert 2s infinite; border: 2px solid var(--med-danger) !important; }
 
-        /* Form Nhập liệu */
-        .input-grid { max-height: 420px; overflow-y: auto; padding-right: 12px; }
-        .input-grid::-webkit-scrollbar { width: 6px; }
-        .input-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .feature-box label { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 3px; }
+        /* Cards */
+        .med-card {
+            background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.02); padding: 1.5rem; height: 100%; transition: 0.4s;
+        }
+        .card-header-med {
+            border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.2rem;
+            font-weight: 800; color: var(--med-primary); display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* Khung nhập liệu */
+        .input-grid { max-height: 400px; overflow-y: auto; padding-right: 8px; }
+        .input-grid::-webkit-scrollbar { width: 5px; }
+        .input-grid::-webkit-scrollbar-thumb { background: var(--phyto-accent); border-radius: 10px; }
+        .feature-box label { font-size: 0.7rem; font-weight: 800; color: var(--med-secondary); text-transform: uppercase; }
         .form-control-med {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 0.5rem 0.8rem;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--med-primary);
-            width: 100%;
-            transition: 0.2s;
+            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
+            padding: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--text-main); width: 100%; transition: 0.3s;
         }
-        .form-control-med:focus { border-color: var(--med-secondary); outline: none; background: #fff; box-shadow: 0 0 0 3px rgba(10, 147, 150, 0.15); }
-        
-        /* Buttons */
-        .btn-med-primary { background: var(--med-primary); color: white; font-weight: 700; border-radius: 8px; padding: 0.7rem 1.5rem; border: none; transition: 0.3s; }
-        .btn-med-primary:hover { background: var(--med-secondary); transform: translateY(-2px); }
-        
-        /* History Table */
-        .history-table { font-size: 0.85rem; }
-        .history-table th { background: var(--med-bg); color: var(--med-primary); text-transform: uppercase; }
-        .history-table td { vertical-align: middle; border-bottom: 1px solid #e2e8f0; }
-        .badge-result { padding: 0.4rem 0.8rem; border-radius: 6px; font-weight: 700; letter-spacing: 0.5px; }
+        .form-control-med:focus { border-color: var(--phyto-accent); outline: none; box-shadow: 0 0 0 3px rgba(140,179,105,0.2); }
+        .btn-med-primary {
+            background: var(--med-primary); color: white; font-weight: 800; border-radius: 10px;
+            padding: 0.8rem; border: none; transition: 0.3s; width: 100%; letter-spacing: 1px;
+        }
+        .btn-med-primary:hover { background: var(--phyto-accent); transform: translateY(-2px); }
+
+        /* Animation Tab */
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Animation DNA Loading */
+        .dna-loader { display: flex; justify-content: center; align-items: center; gap: 6px; height: 150px; }
+        .dna-strand {
+            width: 8px; height: 50px; border-radius: 4px;
+            animation: dnaSpin 1s ease-in-out infinite alternate;
+        }
+        .dna-strand:nth-child(1) { background: var(--med-primary); animation-delay: 0.0s; }
+        .dna-strand:nth-child(2) { background: var(--phyto-accent); animation-delay: 0.2s; }
+        .dna-strand:nth-child(3) { background: var(--med-secondary); animation-delay: 0.4s; }
+        .dna-strand:nth-child(4) { background: var(--phyto-accent); animation-delay: 0.6s; }
+        .dna-strand:nth-child(5) { background: var(--med-primary); animation-delay: 0.8s; }
+        @keyframes dnaSpin { 0% { transform: scaleY(0.2); opacity: 0.4; } 100% { transform: scaleY(1.2); opacity: 1; } }
+
+        /* Cảnh báo DDI (Drug-Drug Interaction) */
+        .ddi-alert {
+            background: rgba(255, 153, 0, 0.1); border-left: 5px solid #ff9900;
+            padding: 1rem; border-radius: 8px; margin-top: 1rem; color: var(--text-main);
+            animation: pulseWarning 2s infinite;
+        }
+        @keyframes pulseWarning { 0% { box-shadow: 0 0 0 rgba(255, 153, 0, 0.4); } 50% { box-shadow: 0 0 15px rgba(255, 153, 0, 0.2); } 100% { box-shadow: 0 0 0 rgba(255, 153, 0, 0); } }
     </style>
 </head>
 <body>
 
-    <!-- Navbar Bệnh viện -->
-    <div class="his-navbar d-flex justify-content-between align-items-center">
-        <div class="nav-brand">🏥 LIMS CLINICAL DASHBOARD</div>
+    <!-- NAVBAR Y KHOA -->
+    <div class="his-navbar">
+        <div class="nav-brand">🌿 LIMS R&D CENTER</div>
         <div>
-            <button class="his-nav-btn active" onclick="openTab('tab-qc', this)">Chẩn Đoán Khối U</button>
-            <button class="his-nav-btn" onclick="openTab('tab-kho', this)">Kho Sinh Thiết</button>
-            <button class="his-nav-btn" onclick="openTab('tab-phacdo', this)">Phác Đồ Dược Lý</button>
-            <a href="/logout" class="his-nav-btn" style="color: #ffb3c1;">Thoát Hệ Thống</a>
+            <button class="his-nav-btn active" onclick="openTab('tab-qc', this)">🔬 QC Khối U</button>
+            <button class="his-nav-btn" onclick="openTab('tab-kho', this)">🧬 Kho Sinh Thiết</button>
+            <button class="his-nav-btn" onclick="openTab('tab-phacdo', this)">💊 Dược Lý Học</button>
+            <button class="theme-toggle ms-2" onclick="toggleTheme()" id="themeBtn">🌙 Lab Mode</button>
         </div>
     </div>
 
     <div class="container-fluid py-4 px-4">
         
-        <!-- TAB 1: CHẨN ĐOÁN (Chính) -->
+        <!-- TAB 1: CHẨN ĐOÁN QC -->
         <div id="tab-qc" class="tab-content active">
             <div class="row g-4">
                 
-                <!-- CỘT TRÁI: NHẬP LIỆU -->
+                <!-- Khu vực Nhập liệu -->
                 <div class="col-lg-5">
                     <div class="med-card">
                         <div class="card-header-med">
-                            <span>BẢNG NHẬP LIỆU LÂM SÀNG</span>
+                            <span>🧪 CHỈ SỐ HÌNH THÁI VẬT LÝ</span>
+                            <button type="button" class="btn btn-sm btn-outline-success fw-bold" onclick="generateRandomSample()">🎲 Auto Sinh Mẫu</button>
                         </div>
-                        
-                        <!-- Bộ công cụ chọn mẫu -->
-                        <div class="d-flex gap-2 mb-3 bg-light p-2 rounded border">
-                            <select id="sampleSelect" class="form-select form-select-sm fw-bold text-secondary" style="width: 60%;">
-                                <option value="none">-- Tự nhập tay --</option>
-                                <option value="malignant">Mẫu Test: ÁC TÍNH RÕ RÀNG</option>
-                                <option value="benign">Mẫu Test: LÀNH TÍNH ĐIỂN HÌNH</option>
-                            </select>
-                            <button type="button" class="btn btn-sm btn-outline-info fw-bold w-100" onclick="generateRandomSample()">🎲 Tạo Ngẫu Nhiên</button>
-                        </div>
-
                         <form id="predictForm">
                             <div class="input-grid row g-2">
                                 {% for feature in feature_names %}
                                 <div class="col-6 feature-box">
-                                    <label>{{ feature | replace(" ", "_") | upper }}</label>
+                                    <label>{{ feature | replace(" ", "_") }}</label>
                                     <input type="number" step="any" class="form-control-med" id="{{ feature }}" required>
                                 </div>
                                 {% endfor %}
                             </div>
-                            <button type="submit" class="btn-med-primary w-100 mt-4" id="submitBtn">PHÂN TÍCH HỆ THỐNG AI</button>
+                            <button type="submit" class="btn-med-primary mt-4" id="submitBtn">PHÂN TÍCH CHUYÊN SÂU</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- CỘT PHẢI: KẾT QUẢ & LỊCH SỬ -->
-                <div class="col-lg-7 d-flex flex-column gap-4">
-                    
-                    <!-- Bảng Kết quả -->
-                    <div class="med-card" id="resultCard">
+                <!-- Khu vực Báo cáo -->
+                <div class="col-lg-7">
+                    <!-- ID coa-report dùng để xuất file PDF -->
+                    <div class="med-card" id="coa-report">
                         <div class="card-header-med">
-                            <span>BÁO CÁO GIẢI PHẪU BỆNH AI</span>
-                            <span id="qcStatus" class="badge bg-secondary">Chờ dữ liệu</span>
-                        </div>
-                        <div class="row align-items-center" id="resultContainer">
-                            <div class="col-md-6 text-center py-4">
-                                <h1 style="font-size: 4rem; opacity: 0.2; margin: 0;">🔬</h1>
-                                <p class="text-muted fw-bold mt-3">Hệ thống đang chờ dữ liệu đầu vào...</p>
+                            <span>📑 PHIẾU KIỂM NGHIỆM ĐIỆN TỬ (COA)</span>
+                            <div>
+                                <span id="qcStatus" class="badge bg-secondary">Chờ dữ liệu</span>
+                                <button class="btn btn-sm btn-danger ms-2 fw-bold d-none" id="pdfBtn" onclick="exportPDF()">🖨️ Xuất PDF</button>
                             </div>
-                            <div class="col-md-6">
-                                <canvas id="radarChart" width="100" height="100" style="opacity: 0.2;"></canvas>
+                        </div>
+                        
+                        <div class="row align-items-center" id="resultContainer" style="min-height: 250px;">
+                            <div class="col-12 text-center text-muted fw-bold">
+                                <h1 style="font-size: 3rem; opacity: 0.3;">🔬</h1>
+                                Vui lòng nhập dữ liệu để hệ thống AI mô phỏng cấu trúc.
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bảng Lịch sử -->
-                    <div class="med-card flex-grow-1">
-                        <div class="card-header-med mb-0 pb-2">
-                            <span>LỊCH SỬ PHIÊN KIỂM NGHIỆM</span>
-                            <span class="badge bg-light text-dark border" id="sessionCount">0 ca</span>
-                        </div>
-                        <div class="table-responsive" style="max-height: 200px;">
-                            <table class="table history-table table-hover mt-3">
-                                <thead>
-                                    <tr>
-                                        <th>Thời gian</th>
-                                        <th>Mã Bệnh Án (Phiên)</th>
-                                        <th>Kết Luận AI</th>
-                                        <th>Độ Tin Cậy</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historyTableBody">
-                                    <!-- Lịch sử sẽ xuất hiện ở đây -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <!-- Bảng Lịch sử thu gọn -->
+                    <div class="med-card mt-4 p-3">
+                        <h6 class="fw-bold mb-2" style="color: var(--med-primary);">🕒 LỊCH SỬ PHIÊN</h6>
+                        <table class="table table-sm table-borderless text-center m-0" style="color: var(--text-main); font-size: 0.85rem;">
+                            <tbody id="historyTableBody"></tbody>
+                        </table>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: KHO SINH THIẾT (Tối giản chuẩn Y tế) -->
+        <!-- TAB 2: KHO SINH THIẾT -->
         <div id="tab-kho" class="tab-content">
             <div class="med-card">
-                <div class="card-header-med">HỆ THỐNG QUẢN LÝ MẪU VẬT LÝ</div>
-                <table class="table table-bordered">
-                    <thead class="table-light"><tr><th>ID Mẫu</th><th>Lưu Trữ</th><th>Dung môi</th><th>Tình trạng</th></tr></thead>
+                <div class="card-header-med">🧬 LƯU TRỮ VÀ BẢO QUẢN MẪU</div>
+                <table class="table table-bordered text-center" style="color: var(--text-main);">
+                    <thead style="background: var(--bg-color);"><tr><th>Lot No.</th><th>Nhiệt độ</th><th>Dung môi cố định</th><th>Đánh giá QC</th></tr></thead>
                     <tbody>
-                        <tr><td>#ST-8812</td><td>-80°C Nitơ lỏng</td><td>Formalin 10%</td><td><span class="badge bg-success">Đạt chuẩn</span></td></tr>
-                        <tr><td>#ST-8813</td><td>-20°C Tủ đông</td><td>Paraffin</td><td><span class="badge bg-warning text-dark">Chờ phân tích</span></td></tr>
+                        <tr><td>#BIO-901</td><td class="fw-bold text-primary">-80°C</td><td>Formalin 10%</td><td><span class="badge bg-success">An toàn</span></td></tr>
+                        <tr><td>#BIO-902</td><td class="fw-bold text-info">-20°C</td><td>Khối Paraffin</td><td><span class="badge bg-warning text-dark">Lưu ý rã đông</span></td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- TAB 3: PHÁC ĐỒ DƯỢC LÝ -->
+        <!-- TAB 3: PHÁC ĐỒ DƯỢC LÝ & DDI -->
         <div id="tab-phacdo" class="tab-content">
             <div class="med-card">
-                <div class="card-header-med">HỖ TRỢ ĐIỀU TRỊ & DƯỢC LÝ LÂM SÀNG</div>
-                <div class="row">
-                    <div class="col-md-6 border-end">
-                        <h6 class="text-danger fw-bold">Phác đồ cho Ác tính (Carcinoma)</h6>
-                        <ul class="text-muted" style="font-size: 0.9rem;">
-                            <li><b>Hóa trị liệu:</b> Doxorubicin (dạng Liposome giảm độc tính cơ tim), Paclitaxel.</li>
-                            <li><b>Liệu pháp đích:</b> Trastuzumab (yêu cầu test HER2+). Chú ý bảo quản lạnh kháng thể đơn dòng.</li>
+                <div class="card-header-med">💊 CHUYÊN LUẬN DƯỢC LÝ & CẢNH BÁO</div>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-danger">Hóa Trị Liệu (Carcinoma)</h6>
+                        <ul style="font-size: 0.9rem;">
+                            <li><b>Anthracyclines:</b> Ưu tiên dạng bào chế <span class="text-primary fw-bold">Liposomal Doxorubicin</span> để tăng sinh khả dụng tại đích, giảm độc tính tuần hoàn.</li>
+                            <li><b>Kháng thể đơn dòng:</b> Trastuzumab (HER2+). Yêu cầu bảo quản lạnh nghiêm ngặt để tránh biến tính protein.</li>
                         </ul>
+                        
+                        <!-- Khung cảnh báo DDI Động -->
+                        <div class="ddi-alert">
+                            <span class="fs-5">⚠️</span> <b>TƯƠNG TÁC & ĐỘC TÍNH (DDI):</b><br>
+                            Nguy cơ độc tính tích lũy trên cơ tim khi dùng Doxorubicin liều cao. Bắt buộc kiểm tra LVEF (Siêu âm tim) trước mỗi chu kỳ truyền.
+                        </div>
                     </div>
-                    <div class="col-md-6 px-4">
-                        <h6 class="text-success fw-bold">Phác đồ cho Lành tính (U xơ/Nang)</h6>
-                        <ul class="text-muted" style="font-size: 0.9rem;">
-                            <li>Theo dõi định kỳ 6 tháng/lần qua siêu âm.</li>
-                            <li><b>Nội tiết:</b> Cân nhắc sử dụng thuốc tránh thai phối hợp để điều hòa hormone nếu có chỉ định.</li>
+                    
+                    <div class="col-md-6">
+                        <h6 class="fw-bold text-success">Liệu pháp Nội tiết (Lành/Tiền ung thư)</h6>
+                        <ul style="font-size: 0.9rem;">
+                            <li><b>Cơ chế:</b> Sử dụng thuốc ức chế Aromatase (Letrozole, Anastrozole) giảm chuyển hóa androgen thành estrogen.</li>
+                            <li><b>Dược động học:</b> Thuốc hấp thu tốt qua đường tiêu hóa, thử nghiệm độ hòa tan (Dissolution test) tại pH dạ dày đạt chuẩn.</li>
                         </ul>
                     </div>
                 </div>
@@ -243,38 +236,48 @@
     </div>
 
     <script>
-        // --- 1. HỆ THỐNG LOGIC MẪU TEST ---
-        const featureNames = {{ feature_names | tojson }};
-        const samples = {
-            malignant: [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189],
-            benign: [13.54, 14.36, 87.46, 566.3, 0.09779, 0.08129, 0.06664, 0.04781, 0.1885, 0.05766, 0.2699, 0.7886, 2.058, 23.56, 0.008462, 0.0146, 0.02387, 0.01315, 0.0198, 0.0023, 15.11, 19.26, 99.7, 711.2, 0.144, 0.1773, 0.239, 0.1288, 0.2977, 0.07259]
-        };
-
-        // Lắng nghe Dropdown tự chọn
-        document.getElementById('sampleSelect').addEventListener('change', function(e) {
-            if(samples[e.target.value]) {
-                featureNames.forEach((feat, i) => document.getElementById(feat).value = samples[e.target.value][i]);
+        // --- CHẾ ĐỘ NỀN TỐI (DARK MODE) ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '☀️ Light Mode';
             } else {
-                featureNames.forEach(feat => document.getElementById(feat).value = ""); // Clear form
+                html.setAttribute('data-theme', 'light');
+                btn.innerHTML = '🌙 Lab Mode';
             }
-        });
-
-        // Nút Tạo Ngẫu Nhiên (Trộn một chút sai số sinh học vào mẫu chuẩn)
-        function generateRandomSample() {
-            let base = Math.random() > 0.5 ? samples.malignant : samples.benign;
-            featureNames.forEach((feat, i) => {
-                let randomNoise = base[i] * (0.85 + Math.random() * 0.3); // Dao động +-15%
-                document.getElementById(feat).value = randomNoise.toFixed(4);
-            });
-            document.getElementById('sampleSelect').value = "none";
         }
 
-        // --- 2. HỆ THỐNG TAB & BIỂU ĐỒ ---
+        // --- XUẤT FILE PDF ---
+        function exportPDF() {
+            const element = document.getElementById('coa-report');
+            const opt = {
+                margin: 0.3, filename: 'Phieu_Kiem_Nghiem_COA.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // --- HỆ THỐNG TAB ---
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.his-nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             btnElement.classList.add('active');
             document.getElementById(tabId).classList.add('active');
+        }
+
+        // --- LOGIC MẪU & GỬI DỮ LIỆU ---
+        const featureNames = {{ feature_names | tojson }};
+        const sampleMalignant = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
+        
+        function generateRandomSample() {
+            featureNames.forEach((feat, i) => {
+                let randomNoise = sampleMalignant[i] * (0.8 + Math.random() * 0.4);
+                document.getElementById(feat).value = randomNoise.toFixed(4);
+            });
         }
 
         let radarInstance = null;
@@ -284,78 +287,82 @@
             radarInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['Bán kính', 'Kết cấu', 'Chu vi', 'Diện tích', 'Độ mịn'],
-                    datasets: [{ label: 'Phân tích hình thái', data: dataArray, backgroundColor: color+'33', borderColor: color, borderWidth: 2 }]
+                    labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'],
+                    datasets: [{ data: dataArray, backgroundColor: color+'40', borderColor: color, borderWidth: 2 }]
                 },
-                options: { scales: { r: { ticks: { display: false } } }, plugins: { legend: { display: false } } }
+                options: { 
+                    scales: { r: { ticks: { display: false }, grid: { color: 'rgba(128,128,128,0.2)' } } }, 
+                    plugins: { legend: { display: false } } 
+                }
             });
         }
-        initRadar([0,0,0,0,0], '#0a9396');
-
-        // --- 3. XỬ LÝ GỬI DỮ LIỆU & LƯU LỊCH SỬ ---
-        let patientCount = 0;
 
         document.getElementById('predictForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            const resultCard = document.getElementById('resultCard');
-            btn.innerHTML = "ĐANG PHÂN TÍCH..."; btn.disabled = true;
+            const resultContainer = document.getElementById('resultContainer');
+            
+            // Hiệu ứng Loading DNA
+            btn.disabled = true;
+            document.getElementById('pdfBtn').classList.add('d-none');
+            resultContainer.innerHTML = `
+                <div class="col-12">
+                    <div class="dna-loader">
+                        <div class="dna-strand"></div><div class="dna-strand"></div>
+                        <div class="dna-strand"></div><div class="dna-strand"></div><div class="dna-strand"></div>
+                    </div>
+                    <p class="text-center mt-3 fw-bold" style="color: var(--med-secondary);">Đang giải mã cấu trúc học...</p>
+                </div>
+            `;
 
             let features = {};
             featureNames.forEach(feat => { features[feat] = parseFloat(document.getElementById(feat).value); });
 
-            try {
-                const response = await fetch('/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ features: features }) });
-                const data = await response.json();
-                
-                if (response.ok) {
-                    let isMalignant = data.predicted_class === 0;
-                    let color = isMalignant ? 'var(--med-danger)' : 'var(--med-success)';
-                    let label = isMalignant ? 'ÁC TÍNH (Malignant)' : 'LÀNH TÍNH (Benign)';
-                    let confidence = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(2);
+            setTimeout(async () => {
+                try {
+                    const response = await fetch('/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ features: features }) });
+                    const data = await response.json();
                     
-                    // Hiệu ứng cảnh báo
-                    if(isMalignant) resultCard.classList.add('danger-pulse');
-                    else resultCard.classList.remove('danger-pulse');
-                    
-                    // Cập nhật giao diện Radar & Kết quả
-                    let radarData = [features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100];
-                    initRadar(radarData, color);
-                    document.getElementById('radarChart').style.opacity = '1';
+                    if (response.ok) {
+                        let isMalignant = data.predicted_class === 0;
+                        let color = isMalignant ? '#ff4d4d' : '#20c997';
+                        let label = isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH';
+                        let confidence = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(2);
+                        
+                        document.getElementById('qcStatus').innerHTML = `<span class="badge" style="background:${color};">Đã hoàn tất</span>`;
+                        document.getElementById('pdfBtn').classList.remove('d-none'); // Hiện nút PDF
 
-                    document.getElementById('qcStatus').innerHTML = `<span class="badge" style="background:${color};">Hoàn tất</span>`;
-                    document.getElementById('resultContainer').innerHTML = `
-                        <div class="col-md-6 px-4">
-                            <h6 class="fw-bold" style="color: var(--med-primary);">KẾT LUẬN GIẢI PHẪU:</h6>
-                            <h2 style="color: ${color}; font-weight: 900; margin-top: 10px;">${label}</h2>
-                            <div class="d-flex justify-content-between mt-4 mb-1 fw-bold" style="font-size: 0.9rem;">
-                                <span>Độ tự tin của mô hình:</span><span style="color: ${color};">${confidence}%</span>
+                        resultContainer.innerHTML = `
+                            <div class="col-md-6 px-4 text-start">
+                                <h6 class="fw-bold text-muted mb-1">Mã tham chiếu: COA-${Math.floor(Math.random()*10000)}</h6>
+                                <h2 style="color: ${color}; font-weight: 900;">${label}</h2>
+                                <p style="font-size: 0.85rem; margin-top: 15px;">Phân tích thông qua biến đổi véc-tơ không gian (SVM). Kết quả cho thấy tỷ lệ bất thường cấu trúc tương thích với bệnh lý.</p>
+                                <div class="d-flex justify-content-between mt-3 mb-1 fw-bold" style="font-size: 0.9rem;">
+                                    <span>Độ tin cậy:</span><span style="color: ${color};">${confidence}%</span>
+                                </div>
+                                <div class="progress" style="height: 8px; background: rgba(128,128,128,0.2);">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${confidence}%; background-color: ${color};"></div>
+                                </div>
                             </div>
-                            <div class="progress" style="height: 10px;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${confidence}%; background-color: ${color};"></div>
-                            </div>
-                        </div>
-                        <div class="col-md-6"><canvas id="radarChart" width="100" height="100"></canvas></div>
-                    `;
-                    initRadar(radarData, color); // Re-draw after DOM injection
+                            <div class="col-md-6"><canvas id="radarChart" width="100" height="100"></canvas></div>
+                        `;
+                        
+                        let radarData = [features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100];
+                        initRadar(radarData, color);
 
-                    // Thêm vào Bảng Lịch sử
-                    patientCount++;
-                    document.getElementById('sessionCount').innerText = `${patientCount} ca`;
-                    const timeNow = new Date().toLocaleTimeString();
-                    const newRow = `
-                        <tr style="animation: fadeInUp 0.3s;">
-                            <td class="text-muted fw-bold">${timeNow}</td>
-                            <td>BA-2610-${patientCount.toString().padStart(3, '0')}</td>
-                            <td><span class="badge-result" style="background: ${color}20; color: ${color};">${isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH'}</span></td>
-                            <td class="fw-bold">${confidence}%</td>
-                        </tr>
-                    `;
-                    document.getElementById('historyTableBody').insertAdjacentHTML('afterbegin', newRow);
-                }
-            } catch (error) { alert("Lỗi hệ thống máy chủ!"); }
-            
-            btn.innerHTML = "PHÂN TÍCH HỆ THỐNG AI"; btn.disabled = false;
+                        // Ghi log lịch sử
+                        const time = new Date().toLocaleTimeString();
+                        document.getElementById('historyTableBody').insertAdjacentHTML('afterbegin', `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td class="text-muted">${time}</td>
+                                <td class="fw-bold" style="color: ${color};">${label}</td>
+                                <td>${confidence}%</td>
+                            </tr>
+                        `);
+                    }
+                } catch (e) { alert("Lỗi hệ thống"); }
+                btn.disabled = false;
+            }, 1500); // Tạo độ trễ 1.5s để xem hiệu ứng DNA
         });
     </script>
 </body>
