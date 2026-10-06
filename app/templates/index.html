@@ -27,24 +27,32 @@
 
         @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
 
-        /* --- VẬT DỤNG Y TẾ LƠ LỬNG --- */
+        /* --- VẬT DỤNG Y TẾ LƠ LỬNG 2.0 (SIÊU SINH ĐỘNG) --- */
         .dashboard-floater {
-            position: absolute; font-size: 2.5rem; opacity: 0.15;
-            animation: floatUpDash linear infinite; user-select: none; pointer-events: none;
-            z-index: 1; filter: drop-shadow(0 0 10px rgba(56, 176, 0, 0.3));
+            position: absolute; opacity: 0.3; user-select: none; pointer-events: none; z-index: 1; 
+            filter: drop-shadow(0 0 15px rgba(56, 176, 0, 0.6));
         }
-        @keyframes floatUpDash {
-            0% { transform: translateY(100vh) rotate(0deg) scale(0.8); opacity: 0; }
-            20% { opacity: 0.25; }
-            80% { opacity: 0.25; }
-            100% { transform: translateY(-20vh) rotate(360deg) scale(1.2); opacity: 0; }
+        
+        /* 2 Luồng chuyển động xoay ngược chiều nhau */
+        @keyframes floatUpRight {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.45; } 80% { opacity: 0.45; }
+            100% { transform: translateY(-20vh) rotate(360deg) scale(1.3); opacity: 0; }
         }
-        .float-1 { left: 15%; animation-duration: 25s; animation-delay: 0s; font-size: 3rem; }
-        .float-2 { left: 35%; animation-duration: 30s; animation-delay: 5s; font-size: 2.5rem; }
-        .float-3 { left: 55%; animation-duration: 22s; animation-delay: 2s; font-size: 4rem; }
-        .float-4 { left: 75%; animation-duration: 28s; animation-delay: 8s; font-size: 2.8rem; }
-        .float-5 { left: 85%; animation-duration: 35s; animation-delay: 1s; font-size: 3.5rem; }
-        .float-6 { left: 5%;  animation-duration: 20s; animation-delay: 10s; font-size: 2.2rem; }
+        @keyframes floatUpLeft {
+            0% { transform: translateY(110vh) rotate(0deg) scale(1.1); opacity: 0; }
+            15% { opacity: 0.35; } 85% { opacity: 0.35; }
+            100% { transform: translateY(-20vh) rotate(-360deg) scale(0.8); opacity: 0; }
+        }
+
+        .float-1 { left: 8%; animation: floatUpRight 22s linear infinite; animation-delay: 0s; font-size: 3.5rem; }
+        .float-2 { left: 22%; animation: floatUpLeft 28s linear infinite; animation-delay: 4s; font-size: 2.8rem; }
+        .float-3 { left: 35%; animation: floatUpRight 25s linear infinite; animation-delay: 2s; font-size: 4.5rem; }
+        .float-4 { left: 52%; animation: floatUpLeft 30s linear infinite; animation-delay: 8s; font-size: 2.5rem; }
+        .float-5 { left: 68%; animation: floatUpRight 24s linear infinite; animation-delay: 1s; font-size: 3.8rem; }
+        .float-6 { left: 82%; animation: floatUpLeft 29s linear infinite; animation-delay: 6s; font-size: 3rem; }
+        .float-7 { left: 92%; animation: floatUpRight 20s linear infinite; animation-delay: 3s; font-size: 2rem; }
+        .float-8 { left: 45%; animation: floatUpLeft 35s linear infinite; animation-delay: 12s; font-size: 5rem; opacity: 0.15 !important; }
 
         /* --- BỐ CỤC SIDEBAR --- */
         .app-container { display: flex; height: 100vh; width: 100vw; position: relative; z-index: 10; }
@@ -69,26 +77,15 @@
 
         /* --- BỐ CỤC MAIN CONTENT --- */
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        
-        .top-header { 
-            height: 65px; background: rgba(255,255,255,0.5); backdrop-filter: blur(15px); 
-            display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; 
-            border-bottom: 1px solid var(--his-border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); z-index: 90; 
-        }
+        .top-header { height: 65px; background: rgba(255,255,255,0.5); backdrop-filter: blur(15px); display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; border-bottom: 1px solid var(--his-border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); z-index: 90; }
         .header-title { font-weight: 800; color: var(--his-primary); margin: 0; font-size: 1.25rem; letter-spacing: 0.5px; }
-        
         .content-scroll { flex-grow: 1; padding: 1.5rem 2rem; overflow-y: auto; z-index: 10; }
         .tab-pane { display: none; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .tab-pane.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- GLASSMORPHISM PANELS --- */
-        .his-panel { 
-            background: var(--his-panel); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-            border: 1px solid var(--his-border); border-radius: 16px; 
-            box-shadow: 0 8px 32px rgba(0,75,35,0.05); padding: 1.5rem; height: 100%; 
-            display: flex; flex-direction: column; transition: 0.3s; position: relative; z-index: 10;
-        }
+        .his-panel { background: var(--his-panel); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--his-border); border-radius: 16px; box-shadow: 0 8px 32px rgba(0,75,35,0.05); padding: 1.5rem; height: 100%; display: flex; flex-direction: column; transition: 0.3s; position: relative; z-index: 10; }
         .his-panel:hover { box-shadow: 0 12px 40px rgba(0,75,35,0.1); transform: translateY(-3px); border-color: white; }
         .panel-title { font-size: 0.85rem; font-weight: 800; color: #52796f; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.2rem; border-bottom: 2px dashed rgba(0,75,35,0.1); padding-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;}
 
@@ -120,13 +117,15 @@
 </head>
 <body>
 
-<!-- Không Gian Y Tế Lơ Lửng -->
+<!-- Không Gian Y Tế Lơ Lửng 2.0 Đa Chiều -->
 <div class="dashboard-floater float-1">🧬</div>
 <div class="dashboard-floater float-2">🔬</div>
 <div class="dashboard-floater float-3">💊</div>
 <div class="dashboard-floater float-4">💉</div>
 <div class="dashboard-floater float-5">🏥</div>
 <div class="dashboard-floater float-6">🩺</div>
+<div class="dashboard-floater float-7">🩸</div>
+<div class="dashboard-floater float-8">🍀</div>
 
 <div class="app-container">
     
@@ -185,14 +184,13 @@
                         <div class="his-panel">
                             <div class="panel-title">
                                 📈 HỒ SƠ CHỈ SỐ BỆNH NHÂN
-                                <button class="btn btn-sm btn-outline-success py-0 rounded-pill fw-bold bg-white" onclick="autoFill()">Nạp Mẫu Test</button>
+                                <button class="btn btn-sm btn-outline-success py-0 rounded-pill fw-bold bg-white" onclick="autoFill()">🎲 Nạp Mẫu Test</button>
                             </div>
                             <form id="aiForm" class="d-flex flex-column h-100">
                                 <div class="emr-form flex-grow-1">
                                     {% for feature in feature_names %}
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-text">{{ feature[:15] }}</span>
-                                        <!-- Tạo ID an toàn bằng cách thay thế khoảng trắng thành gạch dưới -->
                                         <input type="number" step="any" class="form-control" id="{{ feature | replace(' ', '_') }}" required>
                                     </div>
                                     {% endfor %}
@@ -312,9 +310,7 @@
             <h5 class="fw-bold m-0" style="color: var(--his-primary);">Hồ Sơ Bệnh Án: <span id="modalRefId" class="text-danger"></span></h5>
             <button class="btn-close-modal" onclick="closeModal()">✖</button>
         </div>
-        <div class="row g-3" id="modalBody">
-            <!-- JS sẽ nhồi dữ liệu vào đây -->
-        </div>
+        <div class="row g-3" id="modalBody"></div>
         <div class="mt-4 text-center">
             <button class="btn btn-outline-secondary w-100 fw-bold" onclick="closeModal()">Đóng Hồ Sơ</button>
         </div>
@@ -371,7 +367,6 @@
     function initCharts(radarData, confidence, color) {
         if(radarChart) radarChart.destroy();
         
-        // Cấu hình an toàn tuyệt đối cho Radar Chart để tránh lỗi 'axis'
         radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), { 
             type: 'radar', 
             data: { 
@@ -400,14 +395,22 @@
         document.getElementById('prognosisRate').style.color = color;
     }
 
-    // --- 4. LOGIC AI ---
+    // --- 4. LOGIC AI & MÔ PHỎNG DỮ LIỆU ĐA DẠNG ---
     const featureNames = {{ feature_names | tojson }};
-    const sample = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
+    
+    // ĐÃ SỬA: Khai báo cả mẫu Ác tính và Lành tính
+    const sampleMalignant = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
+    const sampleBenign = [13.54, 14.36, 87.46, 566.3, 0.09779, 0.08129, 0.06664, 0.04781, 0.1885, 0.05766, 0.2699, 0.7886, 2.058, 23.56, 0.008462, 0.0146, 0.02387, 0.01315, 0.0198, 0.0023, 15.11, 19.26, 99.7, 711.2, 0.144, 0.1773, 0.239, 0.1288, 0.2977, 0.07259];
     
     function autoFill() { 
+        // Lựa chọn ngẫu nhiên 50/50 giữa Lành tính và Ác tính mỗi khi ấn nút
+        const isTargetMalignant = Math.random() > 0.5;
+        const baseSample = isTargetMalignant ? sampleMalignant : sampleBenign;
+
         featureNames.forEach((feat, i) => {
             const safeId = feat.replace(/ /g, '_');
-            document.getElementById(safeId).value = (sample[i] * (0.9 + Math.random() * 0.2)).toFixed(4);
+            // Nhân thêm nhiễu (noise) nhỏ để số liệu trông tự nhiên
+            document.getElementById(safeId).value = (baseSample[i] * (0.95 + Math.random() * 0.1)).toFixed(4);
         }); 
     }
 
@@ -445,7 +448,6 @@
                 document.getElementById('statusResult').style.background = color;
                 document.getElementById('exportBtn').classList.remove('d-none');
                 
-                // Nạp dữ liệu an toàn cho Radar
                 let radarData = [
                     features[featureNames[0]] || 0, 
                     features[featureNames[1]] || 0, 
@@ -504,7 +506,7 @@
                 `);
                 
             } catch (e) { 
-                alert("❌ Có lỗi xảy ra trong quá trình nhận dữ liệu hoặc biểu đồ. Lỗi chi tiết: " + e.message); 
+                alert("❌ Lỗi: " + e.message); 
             }
             btn.disabled = false; btn.innerText = "CHẠY MÔ HÌNH MÁY HỌC";
         }, 800); 
