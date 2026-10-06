@@ -19,18 +19,11 @@
             --his-danger: #e63946;
         }
 
-        body {
-            background-color: var(--his-bg); color: var(--his-text);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            margin: 0; padding: 0; overflow: hidden;
-        }
+        body { background-color: var(--his-bg); color: var(--his-text); font-family: 'Inter', 'Segoe UI', sans-serif; margin: 0; padding: 0; overflow: hidden; }
 
-        /* --- BỐ CỤC SIDEBAR (Bệnh Viện) --- */
+        /* --- BỐ CỤC SIDEBAR --- */
         .app-container { display: flex; height: 100vh; width: 100vw; }
-        .sidebar {
-            width: 270px; background: var(--his-primary); color: white;
-            display: flex; flex-direction: column; box-shadow: 4px 0 20px rgba(0,75,35,0.1); z-index: 100;
-        }
+        .sidebar { width: 270px; background: var(--his-primary); color: white; display: flex; flex-direction: column; box-shadow: 4px 0 20px rgba(0,75,35,0.1); z-index: 100; }
         .brand-zone { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .brand-zone h4 { font-weight: 900; letter-spacing: 2px; margin: 0; color: #fff; }
         .brand-zone span { font-size: 0.75rem; color: var(--his-accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;}
@@ -41,11 +34,7 @@
         .user-info span { font-size: 0.7rem; color: #b7e4c7; }
 
         .nav-menu { flex-grow: 1; padding: 1.5rem 0; overflow-y: auto; }
-        .nav-item {
-            padding: 0.8rem 1.5rem; margin: 0.3rem 1rem; border-radius: 10px;
-            cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s;
-            display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.7);
-        }
+        .nav-item { padding: 0.8rem 1.5rem; margin: 0.3rem 1rem; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.7); }
         .nav-item:hover { background: rgba(255,255,255,0.1); color: white; transform: translateX(5px); }
         .nav-item.active { background: var(--his-secondary); color: white; box-shadow: 0 4px 15px rgba(56, 176, 0, 0.4); }
         
@@ -55,21 +44,14 @@
 
         /* --- BỐ CỤC MAIN --- */
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; background: url('https://www.transparenttextures.com/patterns/cubes.png'); }
-        
-        .top-header {
-            height: 65px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 2rem; border-bottom: 1px solid var(--his-border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); z-index: 90;
-        }
+        .top-header { height: 65px; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; border-bottom: 1px solid var(--his-border); box-shadow: 0 4px 15px rgba(0,0,0,0.02); z-index: 90; }
         .header-title { font-weight: 800; color: var(--his-primary); margin: 0; font-size: 1.25rem; letter-spacing: 0.5px; }
-        .header-tools { display: flex; gap: 20px; align-items: center; font-size: 0.85rem; font-weight: 700; color: #52796f; }
-
+        
         .content-scroll { flex-grow: 1; padding: 1.5rem 2rem; overflow-y: auto; }
         .tab-pane { display: none; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
         .tab-pane.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* BENTO PANELS */
         .his-panel { background: var(--his-panel); border: 1px solid var(--his-border); border-radius: 16px; box-shadow: 0 8px 20px rgba(0,75,35,0.04); padding: 1.5rem; height: 100%; display: flex; flex-direction: column; transition: 0.3s; }
         .panel-title { font-size: 0.85rem; font-weight: 800; color: #74a57f; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.2rem; border-bottom: 2px dashed var(--his-border); padding-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;}
 
@@ -80,22 +62,21 @@
         .input-group-sm { margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-radius: 6px; overflow: hidden; }
         .input-group-text { background: #e9ecef; border: none; font-size: 0.75rem; font-weight: 800; width: 120px; color: #2d6a4f; }
         .form-control { border: 1px solid #dee2e6; font-size: 0.85rem; font-weight: 700; color: var(--his-primary); }
-        
         .btn-action { background: linear-gradient(135deg, var(--his-primary), var(--his-secondary)); color: white; font-weight: 800; border-radius: 10px; padding: 0.9rem; width: 100%; border: none; transition: 0.3s; margin-top: 1rem; letter-spacing: 1px; }
         .btn-action:hover { box-shadow: 0 8px 20px rgba(56, 176, 0, 0.4); transform: translateY(-2px); }
 
         .status-badge { font-size: 1.3rem; font-weight: 900; padding: 0.5rem 1.5rem; border-radius: 12px; letter-spacing: 1px; text-transform: uppercase; }
         .chart-container { position: relative; height: 220px; width: 100%; display: flex; justify-content: center; }
 
-        /* --- UI DATASET --- */
+        /* --- UI CHI TIẾT BỆNH ÁN (MODAL) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-card { background: white; padding: 2rem; border-radius: 16px; width: 90%; max-width: 500px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .btn-close-modal { background: none; border: none; font-size: 1.5rem; color: #adb5bd; cursor: pointer; transition: 0.2s; }
+        .btn-close-modal:hover { color: var(--his-danger); }
+        
         .stat-card { background: var(--his-bg); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--his-border); }
         .stat-card h3 { font-size: 2.5rem; font-weight: 900; margin: 0; color: var(--his-primary); }
-        .stat-card p { margin: 0; font-size: 0.85rem; font-weight: 700; color: #52796f; text-transform: uppercase; margin-top: 5px; }
-        .dataset-desc { font-size: 0.9rem; line-height: 1.8; color: #475569; text-align: justify; }
-
-        /* --- UI ARCHIVE --- */
-        .archive-table th { background: var(--his-primary); color: white; font-size: 0.85rem; font-weight: 700; }
-        .archive-table td { vertical-align: middle; font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
     </style>
 </head>
 <body>
@@ -118,9 +99,12 @@
         </div>
 
         <div class="nav-menu">
-            <!-- 3 Tabs theo yêu cầu mới -->
+            <!-- Đã thêm Tab Phác Đồ -->
             <div class="nav-item active" onclick="switchTab('ai-tab', this, 'Trạm Chẩn Đoán Khối U (AI)')">
                 <span class="fs-5">🖥️</span> Trạm Chẩn Đoán
+            </div>
+            <div class="nav-item" onclick="switchTab('treatment-tab', this, 'Đề Xuất Phác Đồ & Tiên Lượng')">
+                <span class="fs-5">🩺</span> Phác Đồ & Tiên Lượng
             </div>
             <div class="nav-item" onclick="switchTab('dataset-tab', this, 'Thông Tin Bộ Dữ Liệu Huấn Luyện (Dataset)')">
                 <span class="fs-5">📊</span> Dữ Liệu Huấn Luyện
@@ -139,20 +123,16 @@
 
     <main class="main-content">
         
-        <!-- HEADER -->
         <header class="top-header">
             <h2 class="header-title" id="pageTitle">Trạm Chẩn Đoán Khối U (AI)</h2>
             <div class="header-tools">
                 <span id="liveClock" style="font-family: monospace; font-size: 1rem; color: var(--his-primary);">00:00:00</span>
-                <span style="border-left: 2px solid #ced4da; padding-left: 15px;">📍 Phòng Lab Trung Tâm</span>
             </div>
         </header>
 
         <div class="content-scroll">
             
-            <!-- ========================================== -->
-            <!-- TAB 1: TRẠM CHẨN ĐOÁN (AI WORKSPACE) -->
-            <!-- ========================================== -->
+            <!-- TAB 1: TRẠM CHẨN ĐOÁN -->
             <div id="ai-tab" class="tab-pane active">
                 <div class="row g-4 h-100">
                     <div class="col-xl-4 col-lg-5">
@@ -179,21 +159,14 @@
                         <div class="his-panel" id="resultPanel">
                             <div class="panel-title">
                                 📊 KẾT QUẢ GIẢI PHẪU BỆNH
-                                <button class="btn btn-sm btn-danger py-0 d-none" id="exportBtn" onclick="exportCOA()">In Bệnh Án</button>
                             </div>
                             <div class="row align-items-center mt-2" id="resultView" style="min-height: 250px;">
                                 <div class="col-md-5 text-center border-end">
                                     <p class="text-muted fw-bold mb-2" style="font-size: 0.8rem; letter-spacing: 1px;">KẾT LUẬN LÂM SÀNG</p>
                                     <div id="statusResult" class="status-badge bg-light text-muted border mb-4 shadow-sm">Chờ Dữ Liệu</div>
-                                    <div style="width: 140px; margin: 0 auto; position: relative;">
-                                        <canvas id="confidenceChart"></canvas>
-                                    </div>
+                                    <div style="width: 140px; margin: 0 auto; position: relative;"><canvas id="confidenceChart"></canvas></div>
                                 </div>
-                                <div class="col-md-7">
-                                    <div class="chart-container">
-                                        <canvas id="radarChart"></canvas>
-                                    </div>
-                                </div>
+                                <div class="col-md-7"><div class="chart-container"><canvas id="radarChart"></canvas></div></div>
                             </div>
                         </div>
 
@@ -212,102 +185,69 @@
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- TAB 2: THÔNG TIN BỘ DỮ LIỆU (DATASET) -->
-            <!-- ========================================== -->
-            <div id="dataset-tab" class="tab-pane">
-                <div class="row g-4">
-                    <!-- Khối Thống kê Tổng quan -->
-                    <div class="col-md-12">
-                        <div class="his-panel pb-2">
-                            <div class="panel-title">Nền Tảng Đào Tạo AI: Breast Cancer Wisconsin (Diagnostic) Dataset</div>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="stat-card">
-                                        <h3>569</h3><p>Tổng số ca bệnh học</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="stat-card" style="border-bottom: 4px solid var(--his-danger);">
-                                        <h3 style="color: var(--his-danger);">212</h3><p>Khối U Ác Tính (Malignant)</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="stat-card" style="border-bottom: 4px solid var(--his-secondary);">
-                                        <h3 style="color: var(--his-secondary);">357</h3><p>Khối U Lành Tính (Benign)</p>
-                                    </div>
+            <!-- TAB 2: PHÁC ĐỒ & TIÊN LƯỢNG (Tab Mới) -->
+            <div id="treatment-tab" class="tab-pane">
+                <div class="row g-4 h-100">
+                    <div class="col-lg-7">
+                        <div class="his-panel h-100">
+                            <div class="panel-title">
+                                📝 ĐỀ XUẤT PHÁC ĐỒ ĐIỀU TRỊ 
+                                <span id="planRefId" class="badge bg-secondary">Chưa có ca bệnh</span>
+                            </div>
+                            <!-- Nội dung sẽ tự động thay đổi dựa vào kết quả Ác/Lành -->
+                            <div id="treatmentPlan" class="mt-3 text-muted fw-bold" style="text-align: justify; line-height: 1.8;">
+                                <div class="text-center mt-5">
+                                    <h1 style="font-size: 3rem; opacity: 0.2;">⏳</h1>
+                                    <p>Vui lòng thực hiện phân tích bệnh án ở Trạm Chẩn Đoán để hệ thống AI đưa ra phác đồ tương ứng.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Khối Mô tả Đặc trưng & Biểu đồ -->
-                    <div class="col-md-7">
+                    <div class="col-lg-5">
                         <div class="his-panel h-100">
-                            <div class="panel-title">Chi Tiết 30 Đặc Trưng Cấu Trúc Học</div>
-                            <p class="dataset-desc">
-                                Mô hình học máy (SVM) được huấn luyện dựa trên hình ảnh kỹ thuật số của tế bào hút kim nhỏ (FNA - Fine Needle Aspirate). Quá trình phân tích tính toán ra 10 đặc điểm thực tế cho từng nhân tế bào, bao gồm:
-                            </p>
-                            <ul class="dataset-desc" style="column-count: 2;">
-                                <li><b>Radius:</b> Bán kính từ tâm đến viền</li>
-                                <li><b>Texture:</b> Độ nhám/Độ biến thiên xám</li>
-                                <li><b>Perimeter:</b> Chu vi lõi tế bào</li>
-                                <li><b>Area:</b> Diện tích mặt cắt ngang</li>
-                                <li><b>Smoothness:</b> Độ mịn bề mặt</li>
-                                <li><b>Compactness:</b> Độ nén/độ đặc</li>
-                                <li><b>Concavity:</b> Mức độ lõm viền</li>
-                                <li><b>Symmetry:</b> Độ đối xứng</li>
-                            </ul>
-                            <p class="dataset-desc mt-2">Mỗi đặc điểm được tính toán dưới 3 góc độ: <b>Mean</b> (Trung bình), <b>Standard Error</b> (Sai số chuẩn), và <b>Worst</b> (Giá trị tệ nhất/Lớn nhất). <i>=> Tổng cộng 30 biến số dự báo.</i></p>
-                        </div>
-                    </div>
-
-                    <div class="col-md-5">
-                        <div class="his-panel h-100">
-                            <div class="panel-title">Tỷ Lệ Phân Bổ (Class Distribution)</div>
-                            <div style="position: relative; height: 220px; width: 100%; display: flex; justify-content: center; align-items: center;">
-                                <canvas id="datasetPieChart"></canvas>
+                            <div class="panel-title">📈 KHẢ NĂNG ĐIỀU TRỊ THÀNH CÔNG</div>
+                            <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                <div style="position: relative; width: 180px;">
+                                    <canvas id="prognosisChart"></canvas>
+                                </div>
+                                <h3 id="prognosisRate" class="fw-bold mt-4" style="color: var(--his-primary);">--%</h3>
+                                <p id="prognosisDesc" class="text-muted text-center" style="font-size: 0.85rem;">Chưa có dữ liệu dự phóng tiên lượng.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- TAB 3: KHO LƯU TRỮ BỆNH ÁN (ARCHIVE) -->
-            <!-- ========================================== -->
+            <!-- TAB 3: DATASET -->
+            <div id="dataset-tab" class="tab-pane">
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="his-panel pb-2">
+                            <div class="panel-title">Nền Tảng Đào Tạo AI: Breast Cancer Wisconsin Dataset</div>
+                            <div class="row g-3">
+                                <div class="col-md-4"><div class="stat-card"><h3>569</h3><p>Tổng số ca bệnh học</p></div></div>
+                                <div class="col-md-4"><div class="stat-card" style="border-bottom: 4px solid var(--his-danger);"><h3 style="color: var(--his-danger);">212</h3><p>Khối U Ác Tính</p></div></div>
+                                <div class="col-md-4"><div class="stat-card" style="border-bottom: 4px solid var(--his-secondary);"><h3 style="color: var(--his-secondary);">357</h3><p>Khối U Lành Tính</p></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: LƯU TRỮ BỆNH ÁN -->
             <div id="archive-tab" class="tab-pane">
                 <div class="his-panel h-100">
-                    <div class="panel-title">
-                        🗄️ HỆ THỐNG PACS - LƯU TRỮ DỮ LIỆU ĐÃ PHÂN TÍCH
-                        <button class="btn btn-sm btn-outline-primary py-0 fw-bold">📥 Xuất file Excel</button>
-                    </div>
+                    <div class="panel-title">🗄️ HỆ THỐNG PACS - LƯU TRỮ DỮ LIỆU CÁC CA ĐÃ KHÁM</div>
                     <div class="table-responsive mt-3" style="max-height: calc(100vh - 250px); overflow-y: auto;">
                         <table class="table archive-table table-hover table-bordered text-center align-middle">
-                            <thead style="position: sticky; top: 0; z-index: 10;">
+                            <thead style="background: var(--his-primary); color: white; position: sticky; top: 0; z-index: 10; font-size: 0.85rem;">
                                 <tr>
-                                    <th>Mã Bệnh Án</th>
-                                    <th>Thời Gian Phân Tích</th>
-                                    <th>Bán Kính Trung Bình</th>
-                                    <th>Độ Nhám (Texture)</th>
-                                    <th>Chu Vi (Perimeter)</th>
-                                    <th>Kết Luận Chẩn Đoán</th>
-                                    <th>Độ Tin Cậy AI</th>
-                                    <th>Hành Động</th>
+                                    <th>Mã Bệnh Án</th><th>Thời Gian</th><th>Bán Kính</th><th>Độ Nhám</th><th>Kết Luận Chẩn Đoán</th><th>Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody id="fullArchiveTableBody">
-                                <!-- Dữ liệu cũ (Mockup) -->
-                                <tr>
-                                    <td class="fw-bold">BA-1029</td><td>08:15:30</td><td>17.99</td><td>10.38</td><td>122.80</td>
-                                    <td><span class="badge bg-danger">ÁC TÍNH</span></td><td class="fw-bold text-danger">99.8%</td>
-                                    <td><button class="btn btn-sm btn-light border">👁️ Xem</button></td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">BA-1030</td><td>08:22:15</td><td>13.54</td><td>14.36</td><td>87.46</td>
-                                    <td><span class="badge bg-success">LÀNH TÍNH</span></td><td class="fw-bold text-success">98.2%</td>
-                                    <td><button class="btn btn-sm btn-light border">👁️ Xem</button></td>
-                                </tr>
+                                <!-- Dữ liệu cũ bị xóa đi, bảng sẽ trống và chờ dữ liệu mới thêm vào -->
                             </tbody>
                         </table>
                     </div>
@@ -318,8 +258,26 @@
     </main>
 </div>
 
+<!-- ============================================== -->
+<!-- POPUP CHI TIẾT BỆNH ÁN (MODAL)                 -->
+<!-- ============================================== -->
+<div id="recordModal" class="modal-overlay d-none">
+    <div class="modal-card">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+            <h5 class="fw-bold m-0" style="color: var(--his-primary);">Hồ Sơ Bệnh Án: <span id="modalRefId" class="text-danger"></span></h5>
+            <button class="btn-close-modal" onclick="closeModal()">✖</button>
+        </div>
+        <div class="row g-3" id="modalBody">
+            <!-- JS sẽ nhồi dữ liệu vào đây -->
+        </div>
+        <div class="mt-4 text-center">
+            <button class="btn btn-outline-secondary w-100 fw-bold" onclick="closeModal()">Đóng Hồ Sơ</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // --- 1. ĐỒNG HỒ & TAB ---
+    // --- 1. CLOCK & TABS ---
     setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleTimeString('vi-VN', { hour12: false }); }, 1000);
 
     function switchTab(tabId, element, title) {
@@ -328,66 +286,67 @@
         element.classList.add('active');
         document.getElementById(tabId).classList.add('active');
         document.getElementById('pageTitle').innerText = title;
-
-        // Vẽ biểu đồ Dataset Pie khi mở tab Dataset
-        if (tabId === 'dataset-tab') initDatasetPie();
     }
 
-    function exportCOA() {
-        const element = document.getElementById('resultPanel');
-        html2pdf().set({ margin: 0.5, filename: 'Ho_So_Chan_Doan_AI.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).from(element).save();
+    // --- 2. QUẢN LÝ DỮ LIỆU & MODAL ---
+    let patientRecords = []; // Mảng lưu trữ các ca đã khám
+
+    function viewRecord(index) {
+        const rec = patientRecords[index];
+        document.getElementById('modalRefId').innerText = rec.id;
+        
+        let badgeClass = rec.isMalignant ? 'bg-danger' : 'bg-success';
+        
+        // HTML hiển thị trong Modal
+        let html = `
+            <div class="col-6"><p class="mb-1 text-muted" style="font-size:0.8rem;">Thời gian phân tích:</p><h6 class="fw-bold">${rec.time}</h6></div>
+            <div class="col-6"><p class="mb-1 text-muted" style="font-size:0.8rem;">Độ tin cậy AI:</p><h6 class="fw-bold">${rec.conf}%</h6></div>
+            
+            <div class="col-4 mt-3"><p class="mb-1 text-muted" style="font-size:0.8rem;">Bán kính tâm:</p><span class="fw-bold">${rec.f0}</span></div>
+            <div class="col-4 mt-3"><p class="mb-1 text-muted" style="font-size:0.8rem;">Độ nhám (Texture):</p><span class="fw-bold">${rec.f1}</span></div>
+            <div class="col-4 mt-3"><p class="mb-1 text-muted" style="font-size:0.8rem;">Chu vi màng:</p><span class="fw-bold">${rec.f2}</span></div>
+            <div class="col-4 mt-3"><p class="mb-1 text-muted" style="font-size:0.8rem;">Diện tích (Area):</p><span class="fw-bold">${rec.f3}</span></div>
+            <div class="col-4 mt-3"><p class="mb-1 text-muted" style="font-size:0.8rem;">Độ mịn bề mặt:</p><span class="fw-bold">${rec.f4}</span></div>
+            
+            <div class="col-12 mt-4 text-center p-3 rounded" style="background: #f8f9fa; border: 1px dashed #ced4da;">
+                <p class="mb-2 text-muted fw-bold">KẾT LUẬN CUỐI CÙNG</p>
+                <span class="badge ${badgeClass} fs-5 px-4 py-2">${rec.label}</span>
+            </div>
+        `;
+        document.getElementById('modalBody').innerHTML = html;
+        document.getElementById('recordModal').classList.remove('d-none');
     }
 
-    // --- 2. BIỂU ĐỒ DATASET TĨNH ---
-    let datasetPie;
-    function initDatasetPie() {
-        if(datasetPie) return; // Chỉ vẽ 1 lần
-        datasetPie = new Chart(document.getElementById('datasetPieChart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: ['Lành Tính (Benign)', 'Ác Tính (Malignant)'],
-                datasets: [{ data: [357, 212], backgroundColor: ['#38b000', '#e63946'], borderWidth: 2, borderColor: '#fff' }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
+    function closeModal() {
+        document.getElementById('recordModal').classList.add('d-none');
     }
 
-    // --- 3. CHART KẾT QUẢ AI TÌNH TRẠNG ---
-    let radarChart, donutChart;
+    // --- 3. CHARTS ---
+    let radarChart, donutChart, progChart;
     function initCharts(radarData, confidence, color) {
         if(radarChart) radarChart.destroy();
-        radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), {
-            type: 'radar',
-            data: { labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'], datasets: [{ data: radarData, backgroundColor: color+'40', borderColor: color, borderWidth: 2, pointRadius: 2 }] },
-            options: { maintainAspectRatio: false, scales: { r: { ticks: { display: false } } }, plugins: { legend: { display: false } } }
-        });
+        radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), { type: 'radar', data: { labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'], datasets: [{ data: radarData, backgroundColor: color+'40', borderColor: color, borderWidth: 2, pointRadius: 2 }] }, options: { maintainAspectRatio: false, scales: { r: { ticks: { display: false } } }, plugins: { legend: { display: false } } } });
 
         if(donutChart) donutChart.destroy();
-        donutChart = new Chart(document.getElementById('confidenceChart').getContext('2d'), {
-            type: 'doughnut',
-            data: { datasets: [{ data: [confidence, 100-confidence], backgroundColor: [color, '#e2e8f0'], borderWidth: 0 }] },
-            options: { cutout: '75%', plugins: { tooltip: { enabled: false } } },
-            plugins: [{
-                id: 'textCenter',
-                beforeDraw: function(chart) {
-                    var width = chart.width, height = chart.height, ctx = chart.ctx;
-                    ctx.restore(); ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "#1b4332";
-                    ctx.textBaseline = "middle";
-                    var text = confidence + "%", textX = Math.round((width - ctx.measureText(text).width) / 2), textY = height / 2;
-                    ctx.fillText(text, textX, textY); ctx.save();
-                }
-            }]
-        });
+        donutChart = new Chart(document.getElementById('confidenceChart').getContext('2d'), { type: 'doughnut', data: { datasets: [{ data: [confidence, 100-confidence], backgroundColor: [color, '#e2e8f0'], borderWidth: 0 }] }, options: { cutout: '75%', plugins: { tooltip: { enabled: false } } } });
     }
-    initCharts([0,0,0,0,0], 0, '#cbd5e1');
 
-    // --- 4. LOGIC MẪU & GỬI DỮ LIỆU ---
+    // Vẽ biểu đồ Tiên lượng thành công ở Tab Phác đồ
+    function initPrognosisChart(rate, color) {
+        if(progChart) progChart.destroy();
+        progChart = new Chart(document.getElementById('prognosisChart').getContext('2d'), { 
+            type: 'doughnut', 
+            data: { datasets: [{ data: [rate, 100-rate], backgroundColor: [color, '#e2e8f0'], borderWidth: 0 }] }, 
+            options: { cutout: '80%', plugins: { tooltip: { enabled: false } } } 
+        });
+        document.getElementById('prognosisRate').innerText = rate + "%";
+        document.getElementById('prognosisRate').style.color = color;
+    }
+
+    // --- 4. LOGIC AI ---
     const featureNames = {{ feature_names | tojson }};
     const sample = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
-    
-    function autoFill() {
-        featureNames.forEach((feat, i) => document.getElementById(feat).value = (sample[i] * (0.9 + Math.random() * 0.2)).toFixed(4));
-    }
+    function autoFill() { featureNames.forEach((feat, i) => document.getElementById(feat).value = (sample[i] * (0.9 + Math.random() * 0.2)).toFixed(4)); }
 
     document.getElementById('aiForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -406,41 +365,71 @@
                     let color = isMalignant ? 'var(--his-danger)' : 'var(--his-secondary)';
                     let label = isMalignant ? 'ÁC TÍNH (MALIGNANT)' : 'LÀNH TÍNH (BENIGN)';
                     let conf = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(1);
+                    const refId = "BA-" + Math.floor(1000 + Math.random()*9000);
+                    const timeNow = new Date().toLocaleTimeString('vi-VN');
                     
+                    // --- CẬP NHẬT TAB 1 (CHẨN ĐOÁN) ---
                     document.getElementById('statusResult').innerText = label;
                     document.getElementById('statusResult').style.color = 'white';
                     document.getElementById('statusResult').style.background = color;
-                    document.getElementById('exportBtn').classList.remove('d-none');
-                    
                     initCharts([features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100], conf, color);
+                    document.getElementById('historyLogMini').insertAdjacentHTML('afterbegin', `<tr><td>${timeNow}</td><td class="fw-bold">${refId}</td><td style="color: ${color}; font-weight:bold;">${label}</td><td>${conf}%</td></tr>`);
 
-                    const refId = "BA-" + Math.floor(1000 + Math.random()*9000);
-                    const timeNow = new Date().toLocaleTimeString('vi-VN');
+                    // --- CẬP NHẬT TAB 2 (PHÁC ĐỒ & TIÊN LƯỢNG) ---
+                    document.getElementById('planRefId').innerText = refId;
+                    let treatHtml = '';
+                    if(isMalignant) {
+                        treatHtml = `
+                            <div class="alert alert-danger p-3 mb-3 border-0" style="background: rgba(230, 57, 70, 0.1);">
+                                <h6 class="fw-bold text-danger m-0">🚨 Mức độ: Nguy Cơ Cao - Cần can thiệp lâm sàng</h6>
+                            </div>
+                            <ul style="color: var(--text-main);">
+                                <li class="mb-2"><b>Phẫu thuật:</b> Đề nghị hội chẩn phẫu thuật cắt bỏ khối u (Lumpectomy) hoặc cắt bỏ tuyến vú toàn phần (Mastectomy) tùy theo kết quả sinh thiết sâu.</li>
+                                <li class="mb-2"><b>Hóa trị liệu (Tùy chọn):</b> Sử dụng hệ phân tán Nano Liposome Doxorubicin để giảm độc tính trên cơ tim, tiêu diệt các tế bào ung thư lân cận.</li>
+                                <li class="mb-2"><b>Xạ trị:</b> Tiêu diệt tế bào ác tính còn sót lại hậu phẫu.</li>
+                            </ul>
+                            <p class="mt-3 text-danger fst-italic">* Chú ý theo dõi phân suất tống máu (LVEF) nếu áp dụng hóa trị.</p>
+                        `;
+                        initPrognosisChart(75, '#e63946');
+                        document.getElementById('prognosisDesc').innerText = "Tiên lượng sống sau 5 năm (Phụ thuộc vào giai đoạn bệnh và thời điểm phẫu thuật).";
+                    } else {
+                        treatHtml = `
+                            <div class="alert alert-success p-3 mb-3 border-0" style="background: rgba(56, 176, 0, 0.1);">
+                                <h6 class="fw-bold text-success m-0">✅ Mức độ: An Toàn - Chưa phát hiện xâm lấn</h6>
+                            </div>
+                            <ul style="color: var(--text-main);">
+                                <li class="mb-2"><b>Theo dõi định kỳ:</b> Khuyến cáo siêu âm và tầm soát lại sau mỗi 6 tháng để đánh giá sự phát triển của khối u xơ/nang.</li>
+                                <li class="mb-2"><b>Nội khoa:</b> Có thể cân nhắc sử dụng liệu pháp điều hòa hormone nếu có dấu hiệu đau nhức hoặc khối u tăng kích thước nhẹ.</li>
+                                <li class="mb-2"><b>Tiểu phẫu (Tùy chọn):</b> Bóc tách u xơ nếu khối u chèn ép gây mất thẩm mỹ hoặc ảnh hưởng sinh hoạt.</li>
+                            </ul>
+                        `;
+                        initPrognosisChart(99, '#38b000');
+                        document.getElementById('prognosisDesc').innerText = "Khả năng phục hồi và không có nguy cơ chuyển hóa ác tính nếu tuân thủ tái khám.";
+                    }
+                    document.getElementById('treatmentPlan').innerHTML = treatHtml;
+
+                    // --- CẬP NHẬT TAB 4 (LƯU TRỮ) ---
+                    // Lưu vào mảng bộ nhớ
+                    const recordIndex = patientRecords.length;
+                    patientRecords.push({
+                        id: refId, time: timeNow, label: label, isMalignant: isMalignant, conf: conf,
+                        f0: features[featureNames[0]], f1: features[featureNames[1]], f2: features[featureNames[2]], f3: features[featureNames[3]], f4: features[featureNames[4]]
+                    });
+
+                    // Thêm dòng mới có nút "Xem" truyền đúng Index
                     const badgeClass = isMalignant ? "bg-danger" : "bg-success";
-
-                    // 1. Thêm vào Log nhỏ ở Tab 1
-                    document.getElementById('historyLogMini').insertAdjacentHTML('afterbegin', `
-                        <tr>
-                            <td>${timeNow}</td><td class="fw-bold">${refId}</td>
-                            <td style="color: ${color}; font-weight:bold;">${label}</td><td>${conf}%</td>
-                        </tr>
-                    `);
-
-                    // 2. TỰ ĐỘNG LƯU VÀO KHO LƯU TRỮ (Tab 3)
                     document.getElementById('fullArchiveTableBody').insertAdjacentHTML('afterbegin', `
                         <tr style="animation: slideUp 0.5s;">
                             <td class="fw-bold text-primary">${refId}</td>
                             <td>${timeNow}</td>
                             <td>${features[featureNames[0]]}</td>
                             <td>${features[featureNames[1]]}</td>
-                            <td>${features[featureNames[2]]}</td>
                             <td><span class="badge ${badgeClass}">${isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH'}</span></td>
-                            <td class="fw-bold" style="color: ${color}">${conf}%</td>
-                            <td><button class="btn btn-sm btn-light border">👁️ Xem</button></td>
+                            <td><button class="btn btn-sm btn-outline-primary fw-bold" onclick="viewRecord(${recordIndex})">👁️ Xem</button></td>
                         </tr>
                     `);
                 }
-            } catch (e) { alert("Mất kết nối máy chủ phân tích"); }
+            } catch (e) { alert("Mất kết nối máy chủ"); }
             btn.disabled = false; btn.innerText = "CHẠY MÔ HÌNH MÁY HỌC";
         }, 800); 
     });
