@@ -97,7 +97,7 @@
         .emr-form::-webkit-scrollbar { width: 6px; }
         .emr-form::-webkit-scrollbar-thumb { background: var(--his-secondary); border-radius: 10px; }
         .input-group-sm { margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); border-radius: 6px; overflow: hidden; }
-        .input-group-text { background: rgba(255,255,255,0.9); border: none; font-size: 0.75rem; font-weight: 800; width: 120px; color: #2d6a4f; }
+        .input-group-text { background: rgba(255,255,255,0.9); border: none; font-size: 0.75rem; font-weight: 800; width: 130px; color: #2d6a4f; }
         .form-control { border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: 700; color: var(--his-primary); }
         .form-control:focus { background: #fff; border-color: var(--his-secondary); box-shadow: 0 0 0 3px rgba(56, 176, 0, 0.2); }
 
@@ -120,7 +120,7 @@
 </head>
 <body>
 
-<!-- Không Gian Y Tế Lơ Lửng Đằng Sau -->
+<!-- Không Gian Y Tế Lơ Lửng -->
 <div class="dashboard-floater float-1">🧬</div>
 <div class="dashboard-floater float-2">🔬</div>
 <div class="dashboard-floater float-3">💊</div>
@@ -191,8 +191,9 @@
                                 <div class="emr-form flex-grow-1">
                                     {% for feature in feature_names %}
                                     <div class="input-group input-group-sm">
-                                        <span class="input-group-text">{{ feature[:14] }}</span>
-                                        <input type="number" step="any" class="form-control" id="{{ feature }}" required>
+                                        <span class="input-group-text">{{ feature[:15] }}</span>
+                                        <!-- Tạo ID an toàn bằng cách thay thế khoảng trắng thành gạch dưới -->
+                                        <input type="number" step="any" class="form-control" id="{{ feature | replace(' ', '_') }}" required>
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -369,7 +370,24 @@
     let radarChart, donutChart, progChart;
     function initCharts(radarData, confidence, color) {
         if(radarChart) radarChart.destroy();
-        radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), { type: 'radar', data: { labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'], datasets: [{ data: radarData, backgroundColor: color+'40', borderColor: color, borderWidth: 2, pointRadius: 2 }] }, options: { maintainAspectRatio: false, scales: { r: { ticks: { display: false } }, angleLines: { color: 'rgba(0,0,0,0.1)' }, grid: { color: 'rgba(0,0,0,0.1)' } }, plugins: { legend: { display: false } } } });
+        
+        // Cấu hình an toàn tuyệt đối cho Radar Chart để tránh lỗi 'axis'
+        radarChart = new Chart(document.getElementById('radarChart').getContext('2d'), { 
+            type: 'radar', 
+            data: { 
+                labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'], 
+                datasets: [{ 
+                    data: radarData, backgroundColor: color+'40', borderColor: color, borderWidth: 2, pointRadius: 2 
+                }] 
+            }, 
+            options: { 
+                maintainAspectRatio: false,
+                scales: { 
+                    r: { ticks: { display: false } } 
+                }, 
+                plugins: { legend: { display: false } } 
+            } 
+        });
 
         if(donutChart) donutChart.destroy();
         donutChart = new Chart(document.getElementById('confidenceChart').getContext('2d'), { type: 'doughnut', data: { datasets: [{ data: [confidence, 100-confidence], backgroundColor: [color, 'rgba(0,0,0,0.05)'], borderWidth: 0 }] }, options: { cutout: '75%', plugins: { tooltip: { enabled: false } } } });
@@ -385,14 +403,24 @@
     // --- 4. LOGIC AI ---
     const featureNames = {{ feature_names | tojson }};
     const sample = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
-    function autoFill() { featureNames.forEach((feat, i) => document.getElementById(feat).value = (sample[i] * (0.9 + Math.random() * 0.2)).toFixed(4)); }
+    
+    function autoFill() { 
+        featureNames.forEach((feat, i) => {
+            const safeId = feat.replace(/ /g, '_');
+            document.getElementById(safeId).value = (sample[i] * (0.9 + Math.random() * 0.2)).toFixed(4);
+        }); 
+    }
 
     document.getElementById('aiForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btn = document.getElementById('analyzeBtn');
         btn.disabled = true; btn.innerText = "ĐANG PHÂN TÍCH TẾ BÀO...";
 
-        let features = {}; featureNames.forEach(feat => { features[feat] = parseFloat(document.getElementById(feat).value); });
+        let features = {}; 
+        featureNames.forEach(feat => { 
+            const safeId = feat.replace(/ /g, '_');
+            features[feat] = parseFloat(document.getElementById(safeId).value) || 0; 
+        });
 
         setTimeout(async () => {
             try {
@@ -417,7 +445,16 @@
                 document.getElementById('statusResult').style.background = color;
                 document.getElementById('exportBtn').classList.remove('d-none');
                 
-                initCharts([features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100], conf, color);
+                // Nạp dữ liệu an toàn cho Radar
+                let radarData = [
+                    features[featureNames[0]] || 0, 
+                    features[featureNames[1]] || 0, 
+                    (features[featureNames[2]] || 0)/10, 
+                    (features[featureNames[3]] || 0)/100, 
+                    (features[featureNames[4]] || 0)*100
+                ];
+                initCharts(radarData, conf, color);
+                
                 document.getElementById('historyLogMini').insertAdjacentHTML('afterbegin', `<tr><td>${timeNow}</td><td class="fw-bold">${refId}</td><td style="color: ${color}; font-weight:bold;">${label}</td><td>${conf}%</td></tr>`);
 
                 document.getElementById('planRefId').innerText = refId;
@@ -466,7 +503,9 @@
                     </tr>
                 `);
                 
-            } catch (e) { alert("❌ Lỗi Trích Xuất: " + e.message); }
+            } catch (e) { 
+                alert("❌ Có lỗi xảy ra trong quá trình nhận dữ liệu hoặc biểu đồ. Lỗi chi tiết: " + e.message); 
+            }
             btn.disabled = false; btn.innerText = "CHẠY MÔ HÌNH MÁY HỌC";
         }, 800); 
     });
