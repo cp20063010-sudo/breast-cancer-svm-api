@@ -12,9 +12,8 @@
             --his-primary: #004b23; 
             --his-secondary: #38b000;
             --his-accent: #ccff33;
-            /* Đổi nền thành màu nền tảng gradient thay vì màu bệt */
             --his-bg: linear-gradient(135deg, #e6f4f1 0%, #d8f3dc 50%, #b7e4c7 100%);
-            --his-panel: rgba(255, 255, 255, 0.75); /* Kính mờ */
+            --his-panel: rgba(255, 255, 255, 0.75); 
             --his-text: #1b4332;
             --his-border: rgba(255, 255, 255, 0.8);
             --his-danger: #e63946;
@@ -28,12 +27,11 @@
 
         @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
 
-        /* --- VẬT DỤNG Y TẾ LƠ LỬNG (FLOATING ICONS) --- */
+        /* --- VẬT DỤNG Y TẾ LƠ LỬNG --- */
         .dashboard-floater {
             position: absolute; font-size: 2.5rem; opacity: 0.15;
             animation: floatUpDash linear infinite; user-select: none; pointer-events: none;
-            z-index: 1; /* Nằm dưới các tấm kính Panel */
-            filter: drop-shadow(0 0 10px rgba(56, 176, 0, 0.3));
+            z-index: 1; filter: drop-shadow(0 0 10px rgba(56, 176, 0, 0.3));
         }
         @keyframes floatUpDash {
             0% { transform: translateY(100vh) rotate(0deg) scale(0.8); opacity: 0; }
@@ -84,7 +82,7 @@
         .tab-pane.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- GLASSMORPHISM PANELS (Kính Mờ) --- */
+        /* --- GLASSMORPHISM PANELS --- */
         .his-panel { 
             background: var(--his-panel); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
             border: 1px solid var(--his-border); border-radius: 16px; 
@@ -112,6 +110,7 @@
         /* --- UI DATASET & MODAL --- */
         .stat-card { background: rgba(255,255,255,0.5); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid var(--his-border); }
         .stat-card h3 { font-size: 2.5rem; font-weight: 900; margin: 0; color: var(--his-primary); }
+        
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,30,15,0.7); z-index: 1000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-card { background: rgba(255,255,255,0.95); padding: 2rem; border-radius: 16px; width: 90%; max-width: 500px; box-shadow: 0 30px 60px rgba(0,0,0,0.3); border: 1px solid white; animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -186,7 +185,7 @@
                         <div class="his-panel">
                             <div class="panel-title">
                                 📈 HỒ SƠ CHỈ SỐ BỆNH NHÂN
-                                <button class="btn btn-sm btn-outline-success py-0 rounded-pill fw-bold" onclick="autoFill()">Nạp Mẫu Test</button>
+                                <button class="btn btn-sm btn-outline-success py-0 rounded-pill fw-bold bg-white" onclick="autoFill()">Nạp Mẫu Test</button>
                             </div>
                             <form id="aiForm" class="d-flex flex-column h-100">
                                 <div class="emr-form flex-grow-1">
@@ -206,6 +205,7 @@
                         <div class="his-panel" id="resultPanel">
                             <div class="panel-title">
                                 📊 KẾT QUẢ GIẢI PHẪU BỆNH
+                                <button class="btn btn-sm btn-danger py-0 d-none" id="exportBtn" onclick="exportCOA()">In PDF</button>
                             </div>
                             <div class="row align-items-center mt-2" id="resultView" style="min-height: 250px;">
                                 <div class="col-md-5 text-center border-end">
@@ -332,6 +332,11 @@
         document.getElementById('pageTitle').innerText = title;
     }
 
+    function exportCOA() {
+        const element = document.getElementById('resultPanel');
+        html2pdf().set({ margin: 0.5, filename: 'Ho_So_Chan_Doan_AI.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).from(element).save();
+    }
+
     // --- 2. QUẢN LÝ DỮ LIỆU & MODAL ---
     let patientRecords = []; 
 
@@ -392,69 +397,76 @@
         setTimeout(async () => {
             try {
                 const response = await fetch('/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ features: features }) });
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.detail || "Lỗi xử lý từ máy chủ");
+                }
+                
                 const data = await response.json();
                 
-                if (response.ok) {
-                    let isMalignant = data.predicted_class === 0;
-                    let color = isMalignant ? 'var(--his-danger)' : 'var(--his-secondary)';
-                    let label = isMalignant ? 'ÁC TÍNH (MALIGNANT)' : 'LÀNH TÍNH (BENIGN)';
-                    let conf = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(1);
-                    const refId = "BA-" + Math.floor(1000 + Math.random()*9000);
-                    const timeNow = new Date().toLocaleTimeString('vi-VN');
-                    
-                    document.getElementById('statusResult').innerText = label;
-                    document.getElementById('statusResult').style.color = 'white';
-                    document.getElementById('statusResult').style.background = color;
-                    initCharts([features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100], conf, color);
-                    document.getElementById('historyLogMini').insertAdjacentHTML('afterbegin', `<tr><td>${timeNow}</td><td class="fw-bold">${refId}</td><td style="color: ${color}; font-weight:bold;">${label}</td><td>${conf}%</td></tr>`);
+                let isMalignant = data.predicted_class === 0;
+                let color = isMalignant ? 'var(--his-danger)' : 'var(--his-secondary)';
+                let label = isMalignant ? 'ÁC TÍNH (MALIGNANT)' : 'LÀNH TÍNH (BENIGN)';
+                let conf = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(1);
+                const refId = "BA-" + Math.floor(1000 + Math.random()*9000);
+                const timeNow = new Date().toLocaleTimeString('vi-VN');
+                
+                document.getElementById('statusResult').innerText = label;
+                document.getElementById('statusResult').style.color = 'white';
+                document.getElementById('statusResult').style.background = color;
+                document.getElementById('exportBtn').classList.remove('d-none');
+                
+                initCharts([features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100], conf, color);
+                document.getElementById('historyLogMini').insertAdjacentHTML('afterbegin', `<tr><td>${timeNow}</td><td class="fw-bold">${refId}</td><td style="color: ${color}; font-weight:bold;">${label}</td><td>${conf}%</td></tr>`);
 
-                    document.getElementById('planRefId').innerText = refId;
-                    let treatHtml = '';
-                    if(isMalignant) {
-                        treatHtml = `
-                            <div class="alert alert-danger p-3 mb-3 border-0" style="background: rgba(230, 57, 70, 0.15);">
-                                <h6 class="fw-bold text-danger m-0">🚨 Mức độ: Nguy Cơ Cao - Cần can thiệp lâm sàng</h6>
-                            </div>
-                            <ul style="color: var(--text-main);">
-                                <li class="mb-2"><b>Phẫu thuật:</b> Đề nghị hội chẩn phẫu thuật cắt bỏ khối u (Lumpectomy) hoặc toàn phần tùy sinh thiết sâu.</li>
-                                <li class="mb-2"><b>Hóa trị liệu:</b> Ưu tiên hệ Nano Liposome Doxorubicin để giảm độc tính trên cơ tim, tiêu diệt tế bào lân cận.</li>
-                                <li class="mb-2"><b>Xạ trị:</b> Tiêu diệt tế bào ác tính còn sót lại hậu phẫu.</li>
-                            </ul>
-                            <p class="mt-3 text-danger fst-italic">* Chú ý theo dõi phân suất tống máu (LVEF) nếu áp dụng hóa trị.</p>
-                        `;
-                        initPrognosisChart(75, '#e63946');
-                        document.getElementById('prognosisDesc').innerText = "Tiên lượng sống sau 5 năm (Phụ thuộc vào giai đoạn bệnh và thời điểm phẫu thuật).";
-                    } else {
-                        treatHtml = `
-                            <div class="alert alert-success p-3 mb-3 border-0" style="background: rgba(56, 176, 0, 0.15);">
-                                <h6 class="fw-bold text-success m-0">✅ Mức độ: An Toàn - Chưa phát hiện xâm lấn</h6>
-                            </div>
-                            <ul style="color: var(--text-main);">
-                                <li class="mb-2"><b>Theo dõi định kỳ:</b> Khuyến cáo siêu âm và tầm soát lại sau mỗi 6 tháng.</li>
-                                <li class="mb-2"><b>Nội khoa:</b> Cân nhắc sử dụng liệu pháp điều hòa hormone (Aromatase inhibitors) nếu khối u tăng kích thước nhẹ.</li>
-                            </ul>
-                        `;
-                        initPrognosisChart(99, '#38b000');
-                        document.getElementById('prognosisDesc').innerText = "Khả năng phục hồi cao, gần như không có nguy cơ chuyển hóa ác tính nếu tuân thủ tái khám.";
-                    }
-                    document.getElementById('treatmentPlan').innerHTML = treatHtml;
-
-                    const recordIndex = patientRecords.length;
-                    patientRecords.push({ id: refId, time: timeNow, label: label, isMalignant: isMalignant, conf: conf, f0: features[featureNames[0]], f1: features[featureNames[1]], f2: features[featureNames[2]], f3: features[featureNames[3]], f4: features[featureNames[4]] });
-
-                    const badgeClass = isMalignant ? "bg-danger" : "bg-success";
-                    document.getElementById('fullArchiveTableBody').insertAdjacentHTML('afterbegin', `
-                        <tr style="animation: slideUp 0.5s;">
-                            <td class="fw-bold text-primary">${refId}</td>
-                            <td>${timeNow}</td>
-                            <td>${features[featureNames[0]]}</td>
-                            <td>${features[featureNames[1]]}</td>
-                            <td><span class="badge ${badgeClass}">${isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH'}</span></td>
-                            <td><button class="btn btn-sm btn-outline-primary fw-bold bg-white" onclick="viewRecord(${recordIndex})">👁️ Xem</button></td>
-                        </tr>
-                    `);
+                document.getElementById('planRefId').innerText = refId;
+                let treatHtml = '';
+                if(isMalignant) {
+                    treatHtml = `
+                        <div class="alert alert-danger p-3 mb-3 border-0" style="background: rgba(230, 57, 70, 0.15);">
+                            <h6 class="fw-bold text-danger m-0">🚨 Mức độ: Nguy Cơ Cao - Cần can thiệp lâm sàng</h6>
+                        </div>
+                        <ul style="color: var(--text-main);">
+                            <li class="mb-2"><b>Phẫu thuật:</b> Đề nghị hội chẩn phẫu thuật cắt bỏ khối u (Lumpectomy) hoặc toàn phần tùy sinh thiết sâu.</li>
+                            <li class="mb-2"><b>Hóa trị liệu:</b> Ưu tiên hệ Nano Liposome Doxorubicin để giảm độc tính trên cơ tim, tiêu diệt tế bào lân cận.</li>
+                            <li class="mb-2"><b>Xạ trị:</b> Tiêu diệt tế bào ác tính còn sót lại hậu phẫu.</li>
+                        </ul>
+                        <p class="mt-3 text-danger fst-italic">* Chú ý theo dõi phân suất tống máu (LVEF) nếu áp dụng hóa trị.</p>
+                    `;
+                    initPrognosisChart(75, '#e63946');
+                    document.getElementById('prognosisDesc').innerText = "Tiên lượng sống sau 5 năm (Phụ thuộc vào giai đoạn bệnh và thời điểm phẫu thuật).";
+                } else {
+                    treatHtml = `
+                        <div class="alert alert-success p-3 mb-3 border-0" style="background: rgba(56, 176, 0, 0.15);">
+                            <h6 class="fw-bold text-success m-0">✅ Mức độ: An Toàn - Chưa phát hiện xâm lấn</h6>
+                        </div>
+                        <ul style="color: var(--text-main);">
+                            <li class="mb-2"><b>Theo dõi định kỳ:</b> Khuyến cáo siêu âm và tầm soát lại sau mỗi 6 tháng.</li>
+                            <li class="mb-2"><b>Nội khoa:</b> Cân nhắc sử dụng liệu pháp điều hòa hormone (Aromatase inhibitors) nếu khối u tăng kích thước nhẹ.</li>
+                        </ul>
+                    `;
+                    initPrognosisChart(99, '#38b000');
+                    document.getElementById('prognosisDesc').innerText = "Khả năng phục hồi cao, gần như không có nguy cơ chuyển hóa ác tính nếu tuân thủ tái khám.";
                 }
-            } catch (e) { alert("Mất kết nối máy chủ"); }
+                document.getElementById('treatmentPlan').innerHTML = treatHtml;
+
+                const recordIndex = patientRecords.length;
+                patientRecords.push({ id: refId, time: timeNow, label: label, isMalignant: isMalignant, conf: conf, f0: features[featureNames[0]], f1: features[featureNames[1]], f2: features[featureNames[2]], f3: features[featureNames[3]], f4: features[featureNames[4]] });
+
+                const badgeClass = isMalignant ? "bg-danger" : "bg-success";
+                document.getElementById('fullArchiveTableBody').insertAdjacentHTML('afterbegin', `
+                    <tr style="animation: slideUp 0.5s;">
+                        <td class="fw-bold text-primary">${refId}</td>
+                        <td>${timeNow}</td>
+                        <td>${features[featureNames[0]]}</td>
+                        <td>${features[featureNames[1]]}</td>
+                        <td><span class="badge ${badgeClass}">${isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH'}</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary fw-bold bg-white" onclick="viewRecord(${recordIndex})">👁️ Xem</button></td>
+                    </tr>
+                `);
+                
+            } catch (e) { alert("❌ Lỗi Trích Xuất: " + e.message); }
             btn.disabled = false; btn.innerText = "CHẠY MÔ HÌNH MÁY HỌC";
         }, 800); 
     });
