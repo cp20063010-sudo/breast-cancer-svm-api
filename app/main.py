@@ -1,7 +1,7 @@
 from pathlib import Path
 import json, joblib, numpy as np
 from fastapi import FastAPI, HTTPException, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field
 
@@ -20,8 +20,16 @@ app = FastAPI(
 
 templates = Jinja2Templates(directory="app/templates")
 
+# --- BỘ NHỚ LƯU TRỮ TÀI KHOẢN ---
+USER_DB = {
+    "bin": "1234"
+}
+
 class PredictionRequest(BaseModel):
     features: dict[str, float] = Field(..., description="Exactly 30 named numeric features")
+
+class PasswordResetRequest(BaseModel):
+    new_password: str
 
 class PredictionResponse(BaseModel):
     predicted_class: int
@@ -40,7 +48,6 @@ def build_vector(payload: PredictionRequest) -> np.ndarray:
 
 @app.get("/login")
 def login_page(request: Request, error: int = 0):
-    # Đã sửa lại cú pháp chuẩn cho FastAPI mới nhất
     return templates.TemplateResponse(
         request=request, 
         name="login.html", 
@@ -49,7 +56,8 @@ def login_page(request: Request, error: int = 0):
 
 @app.post("/login")
 def login_process(username: str = Form(...), password: str = Form(...)):
-    if username == "bin" and password == "1234":
+    # Đã sửa: Kiểm tra từ bộ nhớ USER_DB thay vì code cứng
+    if username in USER_DB and USER_DB[username] == password:
         response = RedirectResponse(url="/", status_code=303)
         response.set_cookie(key="lims_session", value="authenticated", httponly=True)
         return response
@@ -61,12 +69,17 @@ def logout():
     response.delete_cookie("lims_session")
     return response
 
+# --- API CẬP NHẬT MẬT KHẨU TỪ GIAO DIỆN ---
+@app.post("/reset-password")
+def reset_password(req: PasswordResetRequest):
+    USER_DB["bin"] = req.new_password
+    return JSONResponse(content={"status": "success"})
+
 @app.get("/")
 def root(request: Request):
     if not request.cookies.get("lims_session"):
         return RedirectResponse(url="/login")
         
-    # Đã sửa lại cú pháp chuẩn cho FastAPI mới nhất
     return templates.TemplateResponse(
         request=request, 
         name="index.html", 
