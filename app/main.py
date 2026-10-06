@@ -97,12 +97,26 @@ def get_metadata(): return metadata
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(payload: PredictionRequest):
-    x = build_vector(payload)
-    predicted_class = int(model.predict(x)[0])
-    p = {int(c): float(v) for c, v in zip(list(model.named_steps["svc"].classes_), model.predict_proba(x)[0])}
-    return PredictionResponse(
-        predicted_class=predicted_class,
-        predicted_label=metadata["class_mapping"][str(predicted_class)],
-        probability_malignant=p[0], probability_benign=p[1],
-        model_version=metadata["model_version"], warning=metadata["warning"]
-    )
+    try:
+        x = build_vector(payload)
+        predicted_class = int(model.predict(x)[0])
+        
+        # Trích xuất xác suất an toàn (Không phụ thuộc vào tên Pipeline)
+        if hasattr(model, "predict_proba"):
+            probs = model.predict_proba(x)[0]
+        else:
+            # Fallback nếu mô hình không hỗ trợ predict_proba
+            probs = [1.0, 0.0] if predicted_class == 0 else [0.0, 1.0]
+
+        return PredictionResponse(
+            predicted_class=predicted_class,
+            predicted_label=metadata["class_mapping"][str(predicted_class)],
+            probability_malignant=float(probs[0]), 
+            probability_benign=float(probs[1]),
+            model_version=metadata.get("model_version", "1.0"), 
+            warning=metadata.get("warning", "")
+        )
+    except Exception as e:
+        # In lỗi ra log của Render để dễ theo dõi
+        print(f"LỖI HỆ THỐNG AI: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Lỗi phân tích AI: {str(e)}")
