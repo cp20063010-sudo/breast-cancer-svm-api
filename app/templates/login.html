@@ -9,87 +9,50 @@
     
     <style>
         :root { --cursor-x: 50vw; --cursor-y: 50vh; }
-        body {
-            margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, #e6f4f1 0%, #b2d8d8 50%, #8cb369 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow: hidden; position: relative; transition: background 0.8s ease;
-        }
+        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e6f4f1 0%, #b2d8d8 50%, #8cb369 100%); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; position: relative; transition: background 0.8s ease; }
         body.dark-mode { background: #000000; }
         #particles-js { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
         
-        .spotlight {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;
-            background: radial-gradient(circle 200px at var(--cursor-x) var(--cursor-y), transparent 0%, rgba(0,0,0,0.95) 120px, #000000 220px);
-            opacity: 0; transition: opacity 0.8s ease;
-        }
+        .spotlight { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; background: radial-gradient(circle 200px at var(--cursor-x) var(--cursor-y), transparent 0%, rgba(0,0,0,0.95) 120px, #000000 220px); opacity: 0; transition: opacity 0.8s ease; }
         body.dark-mode .spotlight { opacity: 1; }
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
-            border-radius: 20px; padding: 3rem 2.5rem; width: 100%; max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15); text-align: center; z-index: 10;
-            border: 2px solid rgba(255, 255, 255, 0.9); position: relative; transition: 0.5s;
-        }
+        .login-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-radius: 20px; padding: 3rem 2.5rem; width: 100%; max-width: 420px; box-shadow: 0 20px 50px rgba(0,0,0,0.15); text-align: center; z-index: 10; border: 2px solid rgba(255, 255, 255, 0.9); position: relative; transition: 0.5s; }
         body.dark-mode .login-card { background: rgba(20, 20, 20, 0.9); border-color: #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
 
-        .owl-guardian {
-            position: absolute; top: -75px; left: 50%; transform: translateX(-50%) scale(0);
-            width: 80px; height: 80px; background: linear-gradient(135deg, #2a2a2a, #111);
-            border-radius: 50%; box-shadow: 0 0 20px rgba(140, 179, 105, 0.5), inset 0 0 10px rgba(0,0,0,0.8);
-            border: 2px solid #8cb369; z-index: 11; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .owl-guardian { position: absolute; top: -75px; left: 50%; transform: translateX(-50%) scale(0); width: 80px; height: 80px; background: linear-gradient(135deg, #2a2a2a, #111); border-radius: 50%; box-shadow: 0 0 20px rgba(140, 179, 105, 0.5), inset 0 0 10px rgba(0,0,0,0.8); border: 2px solid #8cb369; z-index: 11; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         body.dark-mode .owl-guardian { transform: translateX(-50%) scale(1); }
-        .owl-guardian::before, .owl-guardian::after {
-            content: ''; position: absolute; top: -10px; width: 0; height: 0;
-            border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 25px solid #2a2a2a; z-index: -1;
-        }
+        .owl-guardian::before, .owl-guardian::after { content: ''; position: absolute; top: -10px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 25px solid #2a2a2a; z-index: -1; }
         .owl-guardian::before { left: -5px; transform: rotate(-30deg); }
         .owl-guardian::after { right: -5px; transform: rotate(30deg); }
-        
         .owl-eyes-container { display: flex; justify-content: center; align-items: center; gap: 10px; height: 100%; padding-top: 10px; }
         .owl-eye { width: 28px; height: 28px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative; box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 5px #000; }
         .owl-pupil { width: 12px; height: 12px; background: #000; border-radius: 50%; position: absolute; box-shadow: inset -2px -2px 4px rgba(255,255,255,0.4); transition: transform 0.05s linear; }
         .owl-beak { position: absolute; top: 52px; left: 35px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 10px solid #ff9900; }
 
-        .logo-box {
-            width: 85px; height: 85px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 1.5rem auto; font-size: 2.8rem; border: 4px solid #0a9396; transition: 0.4s;
-        }
+        .logo-box { width: 85px; height: 85px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; font-size: 2.8rem; border: 4px solid #0a9396; transition: 0.4s; }
         body.dark-mode .logo-box { transform: scale(0); opacity: 0; position: absolute; }
-
         .title { color: #005f73; font-weight: 900; margin-bottom: 0.2rem; font-size: 1.7rem; letter-spacing: 1px; transition: 0.4s; }
         .subtitle { color: #64748b; font-size: 0.9rem; font-weight: 700; margin-bottom: 2rem; transition: 0.4s; }
         body.dark-mode .title { color: #8cb369; }
         body.dark-mode .subtitle { color: #94a3b8; }
-
         .form-control { background-color: #f4f6f9; border: 2px solid #cbd5e1; border-radius: 10px; padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; font-weight: 700; transition: 0.3s; }
         .form-control:focus { border-color: #0a9396; box-shadow: none; outline: none; }
         body.dark-mode .form-control { background: #1a1a1a; color: #fff; border-color: #333; }
         body.dark-mode .form-control:focus { border-color: #8cb369; }
-
-        .btn-login {
-            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%); border: none; border-radius: 12px; color: white;
-            font-weight: 900; padding: 1rem; width: 100%; letter-spacing: 1px; transition: 0.3s;
-        }
+        .btn-login { background: linear-gradient(135deg, #005f73 0%, #0a9396 100%); border: none; border-radius: 12px; color: white; font-weight: 900; padding: 1rem; width: 100%; letter-spacing: 1px; transition: 0.3s; }
         .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(10, 147, 150, 0.4); }
         body.dark-mode .btn-login { background: linear-gradient(135deg, #5b823b 0%, #8cb369 100%); }
         body.dark-mode .btn-login:hover { box-shadow: 0 10px 25px rgba(140, 179, 105, 0.4); }
-
         .btn-forgot { background: transparent; border: none; color: #ff6b6b; font-weight: 700; font-size: 0.85rem; margin-top: 1rem; cursor: pointer; transition: 0.3s; }
         .btn-forgot:hover { color: #ff4757; text-decoration: underline; }
         body.dark-mode .btn-forgot { color: #8cb369; }
-
         .hospital-footer { margin-top: 1.5rem; font-size: 0.75rem; color: #94a3b8; font-weight: 700; transition: 0.4s;}
     </style>
 </head>
 <body>
-
     <div id="particles-js"></div>
     <div class="spotlight"></div>
-
     <div class="login-card">
-        
         <div class="owl-guardian">
             <div class="owl-eyes-container">
                 <div class="owl-eye"><div class="owl-pupil"></div></div>
@@ -97,19 +60,18 @@
             </div>
             <div class="owl-beak"></div>
         </div>
-        
         <div class="logo-box">🌿</div>
         <h2 class="title" id="greetingTitle">VÉSICAR R&D</h2>
         <div class="subtitle" id="systemMsg">Hệ Thống Phân Tích & Bào Chế Nano</div>
 
-        <!-- 1. FORM ĐĂNG NHẬP -->
+        <!-- FORM LOGIN -->
         <form id="formLogin" action="/login" method="POST">
-            <input type="text" name="username" class="form-control" placeholder="Mã Nghiên Cứu Viên (Mặc định: bin)" required>
-            <input type="password" name="password" class="form-control" placeholder="Mật mã an ninh (Mặc định: 1234)" required>
+            <input type="text" name="username" class="form-control" placeholder="Mã Nghiên Cứu Viên (Thử: bin)" required>
+            <input type="password" name="password" class="form-control" placeholder="Mật mã an ninh (Thử: 1234)" required>
             <button type="submit" class="btn btn-login" onclick="this.innerHTML='ĐANG XÁC THỰC... 🚀';">TRUY CẬP HỆ THỐNG 🔐</button>
         </form>
 
-        <!-- 2. FORM BẢO MẬT -->
+        <!-- FORM SECURITY -->
         <form id="formSecurity" class="d-none" onsubmit="handleSecurity(event)">
             <p class="text-warning fw-bold mb-2">Hệ thống kích hoạt bảo vệ 3 lớp</p>
             <h5 class="fw-bold mb-3" style="color: #fff;">Câu hỏi bảo mật: BẠN LÀ AI?</h5>
@@ -117,11 +79,10 @@
             <button type="submit" class="btn btn-login">XÁC NHẬN DANH TÍNH 🕵️‍♂️</button>
         </form>
 
-        <!-- 3. FORM ĐỔI MẬT KHẨU THỰC SỰ -->
+        <!-- FORM RESET PASSWORD -->
         <form id="formReset" class="d-none" onsubmit="handleReset(event)">
             <p class="text-success fw-bold mb-2">✔ Xác thực danh tính thành công</p>
             <h5 class="fw-bold mb-3" style="color: #fff;">THIẾT LẬP MẬT KHẨU MỚI</h5>
-            <!-- Gắn ID để lấy dữ liệu gửi về Máy chủ -->
             <input type="password" id="newPass" class="form-control" placeholder="Mật khẩu mới" required>
             <input type="password" id="confirmPass" class="form-control" placeholder="Xác nhận mật khẩu" required>
             <button type="submit" id="btnReset" class="btn btn-login">CẬP NHẬT MẬT KHẨU 🔄</button>
@@ -140,51 +101,28 @@
         document.getElementById('greetingTitle').innerText = greeting;
 
         let isDarkMode = false;
-        
         function toggleNightMode() {
             isDarkMode = !isDarkMode;
             document.body.classList.toggle('dark-mode');
-            
-            const formLogin = document.getElementById('formLogin');
-            const formSec = document.getElementById('formSecurity');
-            const formReset = document.getElementById('formReset');
-            const toggleBtn = document.getElementById('toggleBtn');
-            const msg = document.getElementById('systemMsg');
-            const footer = document.getElementById('footerText');
-
+            const formLogin = document.getElementById('formLogin'), formSec = document.getElementById('formSecurity'), formReset = document.getElementById('formReset'), toggleBtn = document.getElementById('toggleBtn'), msg = document.getElementById('systemMsg'), footer = document.getElementById('footerText');
             if(isDarkMode) {
-                formLogin.classList.add('d-none');
-                formSec.classList.remove('d-none');
-                formReset.classList.add('d-none');
-                toggleBtn.innerText = "🔙 Hủy bỏ, tôi đã nhớ ra";
-                msg.innerText = "Khu vực tối. Di chuyển chuột để chiếu đèn pin.";
-                footer.innerText = "Cú mèo đang giám sát bạn 👀";
-                document.getElementById('secAnswer').value = ""; 
+                formLogin.classList.add('d-none'); formSec.classList.remove('d-none'); formReset.classList.add('d-none');
+                toggleBtn.innerText = "🔙 Hủy bỏ, tôi đã nhớ ra"; msg.innerText = "Khu vực tối. Di chuyển chuột để chiếu đèn pin."; footer.innerText = "Cú mèo đang giám sát bạn 👀"; document.getElementById('secAnswer').value = ""; 
             } else {
-                formLogin.classList.remove('d-none');
-                formSec.classList.add('d-none');
-                formReset.classList.add('d-none');
-                toggleBtn.innerText = "❓ Quên mật khẩu?";
-                msg.innerText = "Hệ Thống Phân Tích & Bào Chế Nano";
-                footer.innerText = "Bảo mật cấp độ phòng Lab 🛡️";
+                formLogin.classList.remove('d-none'); formSec.classList.add('d-none'); formReset.classList.add('d-none');
+                toggleBtn.innerText = "❓ Quên mật khẩu?"; msg.innerText = "Hệ Thống Phân Tích & Bào Chế Nano"; footer.innerText = "Bảo mật cấp độ phòng Lab 🛡️";
             }
         }
 
         document.addEventListener('mousemove', (e) => {
             document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
             document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
-
             if(isDarkMode) {
-                const eyes = document.querySelectorAll('.owl-eye');
-                eyes.forEach(eye => {
-                    const pupil = eye.querySelector('.owl-pupil');
-                    const rect = eye.getBoundingClientRect();
-                    const eyeX = rect.left + rect.width / 2;
-                    const eyeY = rect.top + rect.height / 2;
+                document.querySelectorAll('.owl-eye').forEach(eye => {
+                    const pupil = eye.querySelector('.owl-pupil'), rect = eye.getBoundingClientRect();
+                    const eyeX = rect.left + rect.width / 2, eyeY = rect.top + rect.height / 2;
                     const angle = Math.atan2(e.clientY - eyeY, e.clientX - eyeX);
-                    const pupilX = Math.cos(angle) * 6;
-                    const pupilY = Math.sin(angle) * 6;
-                    pupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
+                    pupil.style.transform = `translate(${Math.cos(angle) * 6}px, ${Math.sin(angle) * 6}px)`;
                 });
             }
         });
@@ -192,65 +130,25 @@
         function handleSecurity(e) {
             e.preventDefault();
             const ans = document.getElementById('secAnswer').value.trim().toLowerCase();
-            
             if (ans === 'thầy minh' || ans === 'thay minh') {
-                document.getElementById('formSecurity').classList.add('d-none');
-                document.getElementById('formReset').classList.remove('d-none');
-                document.getElementById('systemMsg').innerText = "Vui lòng đặt mật khẩu mới an toàn.";
-            } else {
-                alert("❌ SAI RỒI! Cú mèo đang trừng mắt nhìn bạn đấy!");
-                document.getElementById('secAnswer').value = "";
-            }
+                document.getElementById('formSecurity').classList.add('d-none'); document.getElementById('formReset').classList.remove('d-none'); document.getElementById('systemMsg').innerText = "Vui lòng đặt mật khẩu mới an toàn.";
+            } else { alert("❌ SAI RỒI! Cú mèo đang trừng mắt nhìn bạn đấy!"); document.getElementById('secAnswer').value = ""; }
         }
 
-        // --- HÀM KẾT NỐI VỚI MÁY CHỦ ĐỂ CẬP NHẬT MẬT KHẨU ---
         async function handleReset(e) {
             e.preventDefault();
-            
-            const newPass = document.getElementById('newPass').value;
-            const confirmPass = document.getElementById('confirmPass').value;
-            const btnReset = document.getElementById('btnReset');
-            
-            if(newPass !== confirmPass) {
-                alert("❌ Mật khẩu xác nhận không khớp!");
-                return;
-            }
-
-            btnReset.innerText = "ĐANG XỬ LÝ... ⏳";
-            btnReset.disabled = true;
-
+            const newPass = document.getElementById('newPass').value, confirmPass = document.getElementById('confirmPass').value, btnReset = document.getElementById('btnReset');
+            if(newPass !== confirmPass) { alert("❌ Mật khẩu xác nhận không khớp!"); return; }
+            btnReset.innerText = "ĐANG XỬ LÝ... ⏳"; btnReset.disabled = true;
             try {
-                // Gửi mật khẩu mới về cho Máy chủ (FastAPI)
-                const response = await fetch('/reset-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ new_password: newPass })
-                });
-
-                if(response.ok) {
-                    alert("✅ Cập nhật mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.");
-                    document.getElementById('newPass').value = '';
-                    document.getElementById('confirmPass').value = '';
-                    toggleNightMode(); // Trả về giao diện sáng
-                } else {
-                    alert("❌ Hệ thống xảy ra lỗi, vui lòng thử lại.");
-                }
-            } catch (error) {
-                alert("❌ Không thể kết nối tới máy chủ.");
-            }
-
-            btnReset.innerText = "CẬP NHẬT MẬT KHẨU 🔄";
-            btnReset.disabled = false;
+                const response = await fetch('/reset-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ new_password: newPass }) });
+                if(response.ok) { alert("✅ Cập nhật mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."); document.getElementById('newPass').value = ''; document.getElementById('confirmPass').value = ''; toggleNightMode(); } 
+                else { alert("❌ Hệ thống xảy ra lỗi, vui lòng thử lại."); }
+            } catch (error) { alert("❌ Không thể kết nối tới máy chủ."); }
+            btnReset.innerText = "CẬP NHẬT MẬT KHẨU 🔄"; btnReset.disabled = false;
         }
 
-        particlesJS('particles-js', {
-            "particles": {
-                "number": { "value": 60 }, "color": { "value": "#0a9396" },
-                "shape": { "type": "circle" }, "opacity": { "value": 0.5 }, "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#8cb369", "opacity": 0.4, "width": 1.5 },
-                "move": { "enable": true, "speed": 2 }
-            }
-        });
+        particlesJS('particles-js', { "particles": { "number": { "value": 60 }, "color": { "value": "#0a9396" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#8cb369", "opacity": 0.4, "width": 1.5 }, "move": { "enable": true, "speed": 2 } } });
     </script>
 </body>
 </html>
