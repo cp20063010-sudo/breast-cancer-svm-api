@@ -3,125 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng Truy Cập Y Khoa - LIMS</title>
+    <title>VÉSICAR R&D - Cổng Truy Cập</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    
     <style>
-        /* Không gian nền Y tế */
+        :root {
+            /* Tọa độ chuột mặc định ở giữa màn hình */
+            --cursor-x: 50vw;
+            --cursor-y: 50vh;
+        }
+
+        /* KHÔNG GIAN NỀN (Light Mode mặc định) */
         body {
             margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
-            background: linear-gradient(135deg, #005f73 0%, #0a9396 50%, #8cb369 100%);
+            background: linear-gradient(135deg, #e6f4f1 0%, #b2d8d8 50%, #8cb369 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; position: relative;
+            transition: background 0.8s ease;
         }
 
-        /* Hiệu ứng Icon bay */
-        .floating-icon {
-            position: absolute; font-size: 2rem; opacity: 0.3;
-            animation: floatUp linear infinite; user-select: none; pointer-events: none;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        /* Chế độ Phòng tối (Dark Mode) */
+        body.dark-mode {
+            background: #050505;
         }
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) rotate(0deg) scale(0.8); opacity: 0; }
-            20% { opacity: 0.6; }
-            80% { opacity: 0.6; }
-            100% { transform: translateY(-20vh) rotate(360deg) scale(1.3); opacity: 0; }
-        }
-        .icon-1 { left: 10%; animation-duration: 12s; font-size: 2.8rem; }
-        .icon-2 { left: 25%; animation-duration: 16s; animation-delay: 2s; font-size: 2rem; }
-        .icon-3 { left: 45%; animation-duration: 10s; animation-delay: 5s; font-size: 3.5rem; }
-        .icon-4 { left: 65%; animation-duration: 14s; animation-delay: 1s; font-size: 2.5rem; }
-        .icon-5 { left: 80%; animation-duration: 18s; animation-delay: 4s; font-size: 2.2rem; }
-        .icon-6 { left: 90%; animation-duration: 11s; animation-delay: 3s; font-size: 3rem; }
 
-        /* Khung Đăng Nhập */
+        /* Lớp nền hạt phân tử chòm sao */
+        #particles-js { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+
+        /* HIỆU ỨNG ĐÈN PIN (Spotlight Overlay) */
+        /* Bao phủ toàn bộ màn hình bằng màu đen đặc, chỉ khoét một lỗ sáng đi theo tọa độ chuột */
+        .spotlight {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; /* Cho phép click xuyên qua lớp bóng tối */
+            z-index: 9999;
+            background: radial-gradient(circle 180px at var(--cursor-x) var(--cursor-y), transparent 0%, rgba(0,0,0,0.85) 120px, #000000 180px);
+            opacity: 0; 
+            transition: opacity 0.8s ease;
+        }
+        body.dark-mode .spotlight { opacity: 1; }
+
+        /* KHUNG ĐĂNG NHẬP */
         .login-card {
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
             border-radius: 20px; padding: 3rem 2.5rem; width: 100%; max-width: 420px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3); text-align: center; z-index: 10;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            animation: popIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); text-align: center; z-index: 10;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            position: relative;
+            transition: 0.5s;
         }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8) translateY(30px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        /* Khi sang dark mode, giảm độ sáng của thẻ để ánh đèn pin trông thật hơn */
+        body.dark-mode .login-card { background: rgba(30, 30, 30, 0.95); border-color: #333; }
+        body.dark-mode .title { color: #8cb369; }
+        body.dark-mode .subtitle { color: #aaa; }
+        body.dark-mode .form-control { background: #111; color: #fff; border-color: #444; }
 
-        /* Logo rung đập */
+        /* CHÚ CÚ MÈO (The Owl) */
+        .owl-guardian {
+            position: absolute;
+            top: -65px; left: 50%;
+            transform: translateX(-50%) scale(0); /* Ẩn đi lúc đầu */
+            font-size: 4rem;
+            z-index: 11;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hiệu ứng nảy (bounce) */
+            filter: drop-shadow(0 0 10px rgba(140, 179, 105, 0.8));
+        }
+        body.dark-mode .owl-guardian { transform: translateX(-50%) scale(1); } /* Hiện ra khi cúp điện */
+
+        /* Logo thương hiệu (Sẽ ẩn đi khi Cú xuất hiện) */
         .logo-box {
-            width: 85px; height: 85px; background: #eef2f5; border-radius: 50%;
+            width: 85px; height: 85px; background: #fff; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 1.5rem auto; font-size: 2.8rem; border: 4px solid white;
-            animation: pulseHeartbeat 2s infinite alternate;
+            margin: 0 auto 1.5rem auto; font-size: 2.8rem; border: 4px solid #0a9396;
+            transition: 0.4s;
         }
-        @keyframes pulseHeartbeat {
-            0% { box-shadow: 0 0 10px rgba(10, 147, 150, 0.3); transform: scale(1); }
-            100% { box-shadow: 0 0 35px rgba(140, 179, 105, 0.8); transform: scale(1.08); }
-        }
+        body.dark-mode .logo-box { transform: scale(0); opacity: 0; position: absolute; }
 
-        .title { color: #005f73; font-weight: 900; margin-bottom: 0.2rem; font-size: 1.7rem; letter-spacing: 1px; }
-        .subtitle { color: #64748b; font-size: 0.9rem; font-weight: 700; margin-bottom: 2rem; }
+        .title { color: #005f73; font-weight: 900; margin-bottom: 0.2rem; font-size: 1.7rem; letter-spacing: 1px; transition: 0.4s; }
+        .subtitle { color: #64748b; font-size: 0.9rem; font-weight: 700; margin-bottom: 2rem; transition: 0.4s; }
 
-        /* Form nhập liệu */
         .form-control {
             background-color: #f4f6f9; border: 2px solid #cbd5e1; border-radius: 10px;
-            padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; color: #2b2b2b; font-weight: 700; transition: 0.3s;
+            padding: 0.9rem 1.2rem; margin-bottom: 1.2rem; font-weight: 700; transition: 0.3s;
         }
-        .form-control:focus { background-color: white; border-color: #0a9396; box-shadow: 0 0 0 4px rgba(10, 147, 150, 0.15); }
+        .form-control:focus { border-color: #0a9396; box-shadow: none; outline: none; }
 
-        /* Nút bấm luồng sáng */
         .btn-login {
             background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
             border: none; border-radius: 12px; color: white; font-weight: 900;
-            padding: 1rem; width: 100%; letter-spacing: 1.5px; transition: 0.3s;
-            position: relative; overflow: hidden;
+            padding: 1rem; width: 100%; letter-spacing: 1px; transition: 0.3s;
         }
-        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(10, 147, 150, 0.5); color: white; }
-        .btn-login::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg); animation: sweepLight 3s infinite;
-        }
-        @keyframes sweepLight { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        .btn-login:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(10, 147, 150, 0.4); color: white; }
 
-        .hospital-footer { margin-top: 1.5rem; font-size: 0.75rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
+        .btn-forgot {
+            background: transparent; border: none; color: #ff6b6b; font-weight: 700;
+            font-size: 0.85rem; margin-top: 1rem; cursor: pointer; transition: 0.3s;
+        }
+        .btn-forgot:hover { color: #ff4757; text-decoration: underline; }
+        body.dark-mode .btn-forgot { color: #8cb369; }
+
+        .hospital-footer { margin-top: 1.5rem; font-size: 0.75rem; color: #94a3b8; font-weight: 700; transition: 0.4s;}
     </style>
 </head>
 <body>
 
-    <div class="floating-icon icon-1">🧬</div>
-    <div class="floating-icon icon-2">💊</div>
-    <div class="floating-icon icon-3">🔬</div>
-    <div class="floating-icon icon-4">🏥</div>
-    <div class="floating-icon icon-5">🩺</div>
-    <div class="floating-icon icon-6">🧪</div>
+    <!-- Lớp nền chòm sao Nano -->
+    <div id="particles-js"></div>
+    
+    <!-- Lớp Bóng tối & Đèn pin bao phủ toàn màn hình -->
+    <div class="spotlight"></div>
 
     <div class="login-card">
-        <div class="logo-box">🏥</div>
-        <h2 class="title">LIMS CLINICAL</h2>
-        <div class="subtitle">Phòng Thí Nghiệm & Phân Tích Y Khoa</div>
+        <!-- Chú Cú Mèo (Chỉ hiện trong bóng tối) -->
+        <div class="owl-guardian">🦉</div>
+        
+        <!-- Logo (Chỉ hiện lúc sáng) -->
+        <div class="logo-box" id="main-logo">🌿</div>
+        
+        <h2 class="title" id="greetingTitle">VÉSICAR R&D</h2>
+        <div class="subtitle" id="systemMsg">Hệ Thống Phân Tích & Bào Chế Nano</div>
 
-        <!-- Khung báo lỗi từ Server -->
         {% if error == 1 %}
-        <div class="alert alert-danger fw-bold" style="border-radius: 10px; font-size: 0.85rem; padding: 0.7rem; box-shadow: 0 4px 10px rgba(220,53,69,0.2);">
-            ⚠️ Mã định danh hoặc mật mã không hợp lệ!
+        <div class="alert alert-danger fw-bold" style="border-radius: 10px; font-size: 0.85rem; padding: 0.7rem;">
+            ⚠️ Mã định danh không hợp lệ!
         </div>
         {% endif %}
 
-        <!-- Form gửi trực tiếp về máy chủ (Sử dụng action POST truyền thống) -->
         <form action="/login" method="POST" onsubmit="showLoading()">
-            <input type="text" name="username" class="form-control" placeholder="Mã Y tế (Thử: bin)" required>
-            <input type="password" name="password" class="form-control" placeholder="Mật mã (Thử: 1234)" required>
+            <input type="text" name="username" class="form-control" placeholder="Mã Nghiên Cứu Viên (Thử: bin)" required>
+            <input type="password" name="password" class="form-control" placeholder="Mật mã an ninh (Thử: 1234)" required>
             <button type="submit" id="loginBtn" class="btn btn-login">TRUY CẬP HỆ THỐNG 🔐</button>
         </form>
 
-        <div class="hospital-footer">Bảo mật cấp độ phòng Lab 🛡️</div>
+        <!-- Nút kích hoạt hiệu ứng Cúp điện & Đèn pin -->
+        <button type="button" class="btn-forgot" onclick="toggleNightMode()">❓ Quên mật khẩu? (Nhấn thử nhé)</button>
+
+        <div class="hospital-footer" id="footerText">Bảo mật cấp độ phòng Lab 🛡️</div>
     </div>
 
-    <!-- Script tạo hiệu ứng Loading để người dùng biết máy chủ đang phản hồi -->
     <script>
+        // 1. Logic Lời chào theo thời gian thực (Ý tưởng 5)
+        const hour = new Date().getHours();
+        let greeting = "VÉSICAR R&D";
+        if (hour < 12) greeting = "CHÀO BUỔI SÁNG 🌅";
+        else if (hour < 18) greeting = "CHÀO BUỔI CHIỀU ☕";
+        else greeting = "CA TRỰC ĐÊM 🌙";
+        document.getElementById('greetingTitle').innerText = greeting;
+
+        // 2. Logic Cúp điện (Dark Mode) và Bật Đèn Pin
+        let isDarkMode = false;
+        function toggleNightMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            
+            if(isDarkMode) {
+                document.getElementById('systemMsg').innerText = "Hệ thống đang dò tìm mật khẩu...";
+                document.getElementById('footerText').innerText = "Cú mèo đang giám sát vùng tối 👀";
+            } else {
+                document.getElementById('systemMsg').innerText = "Hệ Thống Phân Tích & Bào Chế Nano";
+                document.getElementById('footerText').innerText = "Bảo mật cấp độ phòng Lab 🛡️";
+            }
+        }
+
+        // 3. Logic Đèn pin bám theo chuột
+        document.addEventListener('mousemove', (e) => {
+            // Cập nhật tọa độ X, Y của chuột vào biến CSS của toàn trang
+            document.documentElement.style.setProperty('--cursor-x', e.clientX + 'px');
+            document.documentElement.style.setProperty('--cursor-y', e.clientY + 'px');
+        });
+
+        // 4. Loading khi Submit
         function showLoading() {
             const btn = document.getElementById('loginBtn');
-            btn.innerHTML = "ĐANG VÀO HỆ THỐNG... 🚀";
-            btn.style.opacity = "0.8";
-            btn.style.pointerEvents = "none"; // Khóa nút không cho bấm 2 lần
+            btn.innerHTML = "ĐANG XÁC THỰC... 🚀";
+            btn.style.pointerEvents = "none";
         }
+
+        // 5. Cấu hình Particles.js (Mạng lưới chòm sao Nano)
+        particlesJS('particles-js', {
+            "particles": {
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#0a9396" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#8cb369", "opacity": 0.4, "width": 1.5 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": true, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { 
+                    "onhover": { "enable": true, "mode": "grab" }, // Kéo dãn chòm sao khi di chuột
+                    "onclick": { "enable": true, "mode": "push" } 
+                },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } } }
+            },
+            "retina_detect": true
+        });
     </script>
 </body>
 </html>
