@@ -3,131 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIMS - Y Khoa & Dược Lý</title>
+    <title>VÉSICAR R&D - Dashboard Lâm Sàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Thư viện hỗ trợ xuất file PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* Hệ màu Phyto-Medical (Sáng/Tối) */
+        /* === HỆ MÀU PHYTO-MEDICAL 2.0 === */
         :root {
-            --med-primary: #005f73; /* Xanh y tế */
-            --med-secondary: #0a9396;
-            --phyto-accent: #8cb369; /* Xanh bơ */
-            --bg-color: #f5f9f1;
-            --card-bg: #ffffff;
+            --med-primary: #006d77; 
+            --med-secondary: #83c5be;
+            --phyto-accent: #94d2bd;
+            --bg-grad-1: #edf6f9;
+            --bg-grad-2: #e0ebeb;
+            --card-bg: rgba(255, 255, 255, 0.75);
             --text-main: #2b2b2b;
-            --border-color: #e0e6ed;
-            --input-bg: #f8fafc;
+            --border-color: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --shadow-soft: 0 10px 30px rgba(0, 109, 119, 0.08);
         }
+        
         [data-theme="dark"] {
-            --med-primary: #8cb369; /* Đổi màu chính thành Xanh bơ phát sáng */
-            --med-secondary: #00ffcc;
-            --phyto-accent: #0a9396;
-            --bg-color: #121418;
-            --card-bg: #1e2126;
-            --text-main: #e0e6ed;
-            --border-color: #2d333b;
-            --input-bg: #121418;
+            --med-primary: #8cb369; 
+            --med-secondary: #0a9396;
+            --phyto-accent: #00ffcc;
+            --bg-grad-1: #0f172a;
+            --bg-grad-2: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(15, 23, 42, 0.8);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
+        /* NỀN HÔ HẤP (Breathing Background) */
         body {
-            background-color: var(--bg-color);
+            background: linear-gradient(-45deg, var(--bg-grad-1), var(--bg-grad-2), var(--phyto-accent), var(--bg-grad-1));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: var(--text-main);
             font-family: 'Segoe UI', system-ui, sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease;
+            transition: color 0.4s ease;
+            min-height: 100vh;
         }
+        @keyframes gradientBG { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
 
-        /* Navbar */
+        /* NAVBAR HIỆN ĐẠI */
         .his-navbar {
             background: var(--card-bg);
+            backdrop-filter: blur(16px);
             padding: 0.8rem 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--phyto-accent);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.4s;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft);
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
         }
-        .nav-brand { font-weight: 900; color: var(--med-primary); letter-spacing: 1px; font-size: 1.2rem; }
+        .nav-brand { font-weight: 900; color: var(--med-primary); letter-spacing: 1.5px; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;}
+        .nav-brand span { font-size: 0.8rem; background: var(--med-primary); color: white; padding: 2px 8px; border-radius: 12px; }
+        
         .his-nav-btn {
             background: transparent; color: var(--text-main); border: none;
-            padding: 0.6rem 1rem; font-weight: 700; border-radius: 8px; transition: 0.3s;
+            padding: 0.6rem 1.2rem; font-weight: 700; border-radius: 12px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
         }
-        .his-nav-btn:hover { background: rgba(140, 179, 105, 0.1); color: var(--phyto-accent); }
-        .his-nav-btn.active { background: var(--med-primary); color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .his-nav-btn::before {
+            content: ''; position: absolute; bottom: 0; left: 50%; width: 0; height: 3px;
+            background: var(--med-primary); transition: 0.3s; transform: translateX(-50%); border-radius: 3px;
+        }
+        .his-nav-btn:hover::before { width: 60%; }
+        .his-nav-btn.active { background: var(--med-primary); color: white; box-shadow: 0 4px 15px rgba(0, 109, 119, 0.2); }
+        .his-nav-btn.active::before { display: none; }
         
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            background: var(--bg-color); border: 1px solid var(--border-color);
-            color: var(--text-main); border-radius: 20px; padding: 0.4rem 1rem;
-            font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
+        .theme-toggle { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 20px; padding: 0.4rem 1.2rem; font-weight: 700; cursor: pointer; transition: 0.3s; }
 
-        /* Cards */
+        /* GLASSMORPHISM CARDS */
         .med-card {
-            background: var(--card-bg); border-radius: 15px; border: 1px solid var(--border-color);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.02); padding: 1.5rem; height: 100%; transition: 0.4s;
+            background: var(--card-bg); backdrop-filter: blur(16px);
+            border-radius: 20px; border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-soft); padding: 1.8rem; height: 100%; transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+        .med-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .card-header-med {
-            border-bottom: 2px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.2rem;
-            font-weight: 800; color: var(--med-primary); display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px dashed var(--med-secondary); padding-bottom: 1rem; margin-bottom: 1.5rem;
+            font-weight: 800; color: var(--med-primary); display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
-        /* Khung nhập liệu */
-        .input-grid { max-height: 400px; overflow-y: auto; padding-right: 8px; }
-        .input-grid::-webkit-scrollbar { width: 5px; }
-        .input-grid::-webkit-scrollbar-thumb { background: var(--phyto-accent); border-radius: 10px; }
-        .feature-box label { font-size: 0.7rem; font-weight: 800; color: var(--med-secondary); text-transform: uppercase; }
+        /* FORM NHẬP LIỆU TINH TẾ */
+        .input-grid { max-height: 420px; overflow-y: auto; padding-right: 12px; position: relative; }
+        .input-grid::-webkit-scrollbar { width: 6px; }
+        .input-grid::-webkit-scrollbar-thumb { background: var(--med-secondary); border-radius: 10px; }
+        .feature-box { position: relative; margin-bottom: 8px; }
+        .feature-box label { font-size: 0.65rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+        [data-theme="dark"] .feature-box label { color: #94a3b8; }
         .form-control-med {
-            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--text-main); width: 100%; transition: 0.3s;
+            background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 10px;
+            padding: 0.7rem 1rem; font-size: 0.9rem; font-weight: 700; color: var(--text-main); width: 100%; transition: all 0.3s ease;
         }
-        .form-control-med:focus { border-color: var(--phyto-accent); outline: none; box-shadow: 0 0 0 3px rgba(140,179,105,0.2); }
+        .form-control-med:focus { border-color: var(--med-primary); outline: none; box-shadow: 0 0 0 4px rgba(0, 109, 119, 0.1); transform: scale(1.02); }
+
+        /* NÚT BẤM HIỆU ỨNG CHẤT LỎNG */
         .btn-med-primary {
-            background: var(--med-primary); color: white; font-weight: 800; border-radius: 10px;
-            padding: 0.8rem; border: none; transition: 0.3s; width: 100%; letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--med-primary) 0%, var(--med-secondary) 100%);
+            color: white; font-weight: 900; border-radius: 12px; padding: 1rem; border: none;
+            transition: 0.4s; width: 100%; letter-spacing: 1px; position: relative; overflow: hidden; z-index: 1;
         }
-        .btn-med-primary:hover { background: var(--phyto-accent); transform: translateY(-2px); }
-
-        /* Animation Tab */
-        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Animation DNA Loading */
-        .dna-loader { display: flex; justify-content: center; align-items: center; gap: 6px; height: 150px; }
-        .dna-strand {
-            width: 8px; height: 50px; border-radius: 4px;
-            animation: dnaSpin 1s ease-in-out infinite alternate;
+        .btn-med-primary::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.5s; z-index: -1;
         }
+        .btn-med-primary:hover::after { left: 100%; }
+        .btn-med-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 109, 119, 0.3); }
+
+        /* TIA LASER QUÉT AI (Scanner Effect) */
+        .scanner-box { position: relative; overflow: hidden; }
+        .laser-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: #ff3366; box-shadow: 0 0 15px #ff3366, 0 0 30px #ff3366;
+            opacity: 0; z-index: 50;
+        }
+        @keyframes scanLaser { 0% { top: 0; opacity: 1; } 50% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
+        .scanning .laser-line { animation: scanLaser 1.5s ease-in-out infinite; }
+
+        /* DNA LOADER SẮC NÉT HƠN */
+        .dna-loader { display: flex; justify-content: center; align-items: center; gap: 8px; height: 120px; }
+        .dna-strand { width: 6px; height: 40px; border-radius: 6px; animation: dnaSpin 0.8s ease-in-out infinite alternate; }
         .dna-strand:nth-child(1) { background: var(--med-primary); animation-delay: 0.0s; }
-        .dna-strand:nth-child(2) { background: var(--phyto-accent); animation-delay: 0.2s; }
-        .dna-strand:nth-child(3) { background: var(--med-secondary); animation-delay: 0.4s; }
-        .dna-strand:nth-child(4) { background: var(--phyto-accent); animation-delay: 0.6s; }
-        .dna-strand:nth-child(5) { background: var(--med-primary); animation-delay: 0.8s; }
-        @keyframes dnaSpin { 0% { transform: scaleY(0.2); opacity: 0.4; } 100% { transform: scaleY(1.2); opacity: 1; } }
+        .dna-strand:nth-child(2) { background: var(--phyto-accent); animation-delay: 0.15s; }
+        .dna-strand:nth-child(3) { background: var(--med-secondary); animation-delay: 0.3s; }
+        .dna-strand:nth-child(4) { background: var(--phyto-accent); animation-delay: 0.45s; }
+        .dna-strand:nth-child(5) { background: var(--med-primary); animation-delay: 0.6s; }
+        @keyframes dnaSpin { 0% { transform: scaleY(0.2); opacity: 0.3; } 100% { transform: scaleY(1.4); opacity: 1; } }
 
-        /* Cảnh báo DDI (Drug-Drug Interaction) */
-        .ddi-alert {
-            background: rgba(255, 153, 0, 0.1); border-left: 5px solid #ff9900;
-            padding: 1rem; border-radius: 8px; margin-top: 1rem; color: var(--text-main);
-            animation: pulseWarning 2s infinite;
+        /* ANIMATION XUẤT HIỆN TỪNG PHẦN */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* RADAR GLOW */
+        #radarContainer { position: relative; }
+        #radarContainer::before {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 70%; height: 70%;
+            transform: translate(-50%, -50%); background: radial-gradient(circle, var(--med-secondary) 0%, transparent 70%);
+            opacity: 0.1; z-index: -1; border-radius: 50%; filter: blur(20px);
         }
-        @keyframes pulseWarning { 0% { box-shadow: 0 0 0 rgba(255, 153, 0, 0.4); } 50% { box-shadow: 0 0 15px rgba(255, 153, 0, 0.2); } 100% { box-shadow: 0 0 0 rgba(255, 153, 0, 0); } }
+
+        .badge-status { padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR Y KHOA -->
+    <!-- NAVBAR HIỆN ĐẠI CHUẨN LAB -->
     <div class="his-navbar">
-        <div class="nav-brand">🌿 LIMS R&D CENTER</div>
-        <div>
+        <div class="nav-brand">🌿 VÉSICAR <span>LIMS</span></div>
+        <div class="d-flex align-items-center gap-2">
+            <!-- Đồng hồ thời gian thực -->
+            <div id="liveClock" class="fw-bold me-4" style="color: var(--med-primary); font-size: 0.9rem; font-family: monospace;">Đang tải thời gian...</div>
+            
             <button class="his-nav-btn active" onclick="openTab('tab-qc', this)">🔬 QC Khối U</button>
             <button class="his-nav-btn" onclick="openTab('tab-kho', this)">🧬 Kho Sinh Thiết</button>
             <button class="his-nav-btn" onclick="openTab('tab-phacdo', this)">💊 Dược Lý Học</button>
             <button class="theme-toggle ms-2" onclick="toggleTheme()" id="themeBtn">🌙 Lab Mode</button>
-            <a href="/logout" class="his-nav-btn text-danger ms-2">🚪 Thoát</a>
+            <a href="/logout" class="his-nav-btn text-danger ms-2" style="font-weight: 900;">🚪 Thoát</a>
         </div>
     </div>
 
@@ -137,12 +173,13 @@
         <div id="tab-qc" class="tab-content active">
             <div class="row g-4">
                 
-                <!-- Khu vực Nhập liệu -->
+                <!-- Bảng Nhập Liệu -->
                 <div class="col-lg-5">
-                    <div class="med-card">
+                    <div class="med-card scanner-box" id="inputCard">
+                        <div class="laser-line"></div> <!-- Tia Laser ẩn -->
                         <div class="card-header-med">
-                            <span>🧪 CHỈ SỐ HÌNH THÁI VẬT LÝ</span>
-                            <button type="button" class="btn btn-sm btn-outline-success fw-bold" onclick="generateRandomSample()">🎲 Auto Sinh Mẫu</button>
+                            <span>🧪 Cấu Trúc Hình Thái</span>
+                            <button type="button" class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3" onclick="generateRandomSample()">🎲 Giả Lập Mẫu</button>
                         </div>
                         <form id="predictForm">
                             <div class="input-grid row g-2">
@@ -153,37 +190,40 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <button type="submit" class="btn-med-primary mt-4" id="submitBtn">PHÂN TÍCH CHUYÊN SÂU</button>
+                            <button type="submit" class="btn-med-primary mt-4" id="submitBtn">KÍCH HOẠT MẮT THẦN AI 👁️</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Khu vực Báo cáo -->
-                <div class="col-lg-7">
-                    <!-- ID coa-report dùng để xuất file PDF -->
+                <!-- Bảng Kết Quả & Radar -->
+                <div class="col-lg-7 d-flex flex-column gap-4">
                     <div class="med-card" id="coa-report">
                         <div class="card-header-med">
-                            <span>📑 PHIẾU KIỂM NGHIỆM ĐIỆN TỬ (COA)</span>
+                            <span>📑 Phân Tích Kỹ Thuật Số (COA)</span>
                             <div>
-                                <span id="qcStatus" class="badge bg-secondary">Chờ dữ liệu</span>
-                                <button class="btn btn-sm btn-danger ms-2 fw-bold d-none" id="pdfBtn" onclick="exportPDF()">🖨️ Xuất PDF</button>
+                                <span id="qcStatus" class="badge bg-secondary badge-status">Chưa có dữ liệu</span>
+                                <button class="btn btn-sm btn-danger ms-2 fw-bold d-none rounded-pill px-3" id="pdfBtn" onclick="exportPDF()">🖨️ Xuất Báo Cáo PDF</button>
                             </div>
                         </div>
                         
-                        <div class="row align-items-center" id="resultContainer" style="min-height: 250px;">
-                            <div class="col-12 text-center text-muted fw-bold">
-                                <h1 style="font-size: 3rem; opacity: 0.3;">🔬</h1>
-                                Vui lòng nhập dữ liệu để hệ thống AI mô phỏng cấu trúc.
+                        <div class="row align-items-center" id="resultContainer" style="min-height: 220px;">
+                            <div class="col-12 text-center fw-bold" style="color: #94a3b8;">
+                                <h1 style="font-size: 3.5rem; opacity: 0.2; margin-bottom: 10px;">🔬</h1>
+                                <p style="letter-spacing: 1px;">Sẵn sàng tiếp nhận chuỗi dữ liệu cấu trúc...</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Bảng Lịch sử thu gọn -->
-                    <div class="med-card mt-4 p-3">
-                        <h6 class="fw-bold mb-2" style="color: var(--med-primary);">🕒 LỊCH SỬ PHIÊN</h6>
-                        <table class="table table-sm table-borderless text-center m-0" style="color: var(--text-main); font-size: 0.85rem;">
-                            <tbody id="historyTableBody"></tbody>
-                        </table>
+                    <div class="med-card flex-grow-1 p-3">
+                        <h6 class="fw-bold mb-3" style="color: var(--med-primary); text-transform: uppercase; font-size: 0.85rem;">🕒 Nhật Ký Trạm AI</h6>
+                        <div class="table-responsive" style="max-height: 150px;">
+                            <table class="table table-sm table-borderless text-center align-middle" style="color: var(--text-main); font-size: 0.85rem;">
+                                <thead style="border-bottom: 1px solid var(--border-color); opacity: 0.7;">
+                                    <tr><th>Mã Tham Chiếu</th><th>Thời gian</th><th>Kết Luận Phân Tích</th><th>Độ chính xác</th></tr>
+                                </thead>
+                                <tbody id="historyTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -192,42 +232,51 @@
         <!-- TAB 2: KHO SINH THIẾT -->
         <div id="tab-kho" class="tab-content">
             <div class="med-card">
-                <div class="card-header-med">🧬 LƯU TRỮ VÀ BẢO QUẢN MẪU</div>
-                <table class="table table-bordered text-center" style="color: var(--text-main);">
-                    <thead style="background: var(--bg-color);"><tr><th>Lot No.</th><th>Nhiệt độ</th><th>Dung môi cố định</th><th>Đánh giá QC</th></tr></thead>
-                    <tbody>
-                        <tr><td>#BIO-901</td><td class="fw-bold text-primary">-80°C</td><td>Formalin 10%</td><td><span class="badge bg-success">An toàn</span></td></tr>
-                        <tr><td>#BIO-902</td><td class="fw-bold text-info">-20°C</td><td>Khối Paraffin</td><td><span class="badge bg-warning text-dark">Lưu ý rã đông</span></td></tr>
-                    </tbody>
-                </table>
+                <div class="card-header-med">🧬 Quản Lý Lưu Trữ Vi Sinh</div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-borderless text-center align-middle mt-2" style="color: var(--text-main);">
+                        <thead style="background: rgba(0, 109, 119, 0.1); border-radius: 10px;">
+                            <tr><th>Mã Lô (Lot No.)</th><th>Nhiệt Độ Kho</th><th>Dung Môi Bảo Quản</th><th>Đánh giá Hạn Sử Dụng</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td class="fw-bold">#BIO-26A-01</td><td class="fw-bold text-primary" style="font-size:1.1rem;">-80°C</td><td>Formalin 10%</td><td><span class="badge bg-success rounded-pill px-3">An toàn sinh học</span></td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">#BIO-26A-02</td><td class="fw-bold text-info" style="font-size:1.1rem;">-20°C</td><td>Khối Paraffin Block</td><td><span class="badge bg-warning text-dark rounded-pill px-3">Cảnh báo rã đông</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- TAB 3: PHÁC ĐỒ DƯỢC LÝ & DDI -->
+        <!-- TAB 3: PHÁC ĐỒ DƯỢC LÝ -->
         <div id="tab-phacdo" class="tab-content">
             <div class="med-card">
-                <div class="card-header-med">💊 CHUYÊN LUẬN DƯỢC LÝ & CẢNH BÁO</div>
-                
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <h6 class="fw-bold text-danger">Hóa Trị Liệu (Carcinoma)</h6>
-                        <ul style="font-size: 0.9rem;">
-                            <li><b>Anthracyclines:</b> Ưu tiên dạng bào chế <span class="text-primary fw-bold">Liposomal Doxorubicin</span> để tăng sinh khả dụng tại đích, giảm độc tính tuần hoàn.</li>
-                            <li><b>Kháng thể đơn dòng:</b> Trastuzumab (HER2+). Yêu cầu bảo quản lạnh nghiêm ngặt để tránh biến tính protein.</li>
+                <div class="card-header-med">💊 Hệ Thống Trích Xuất Dược Lý</div>
+                <div class="row g-5 mt-2">
+                    <div class="col-md-6" style="border-right: 1px dashed var(--border-color);">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="fs-4">🧬</span> <h6 class="fw-bold text-danger m-0 fs-5">Hóa Trị Liệu Đặc Trị</h6>
+                        </div>
+                        <ul style="font-size: 0.95rem; line-height: 1.8; color: var(--text-main);">
+                            <li><b>Hệ thống hướng đích:</b> Khuyến nghị sử dụng <span class="text-primary fw-bold">Liposomal Doxorubicin</span>. Cấu trúc vỏ Liposome giúp bao bọc dược chất, giảm tiếp xúc trực tiếp mô lành, gia tăng sinh khả dụng tại vị trí khối u.</li>
+                            <li><b>Kháng thể đơn dòng:</b> Cần duy trì bảo quản lạnh nghiêm ngặt để đảm bảo cấu trúc không gian bậc 3 của protein không bị biến tính.</li>
                         </ul>
-                        
-                        <!-- Khung cảnh báo DDI Động -->
-                        <div class="ddi-alert">
-                            <span class="fs-5">⚠️</span> <b>TƯƠNG TÁC & ĐỘC TÍNH (DDI):</b><br>
-                            Nguy cơ độc tính tích lũy trên cơ tim khi dùng Doxorubicin liều cao. Bắt buộc kiểm tra LVEF (Siêu âm tim) trước mỗi chu kỳ truyền.
+                        <div class="p-3 mt-4" style="background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545; border-radius: 8px; animation: pulseWarning 2s infinite;">
+                            <span class="fw-bold text-danger">⚠️ CẢNH BÁO TƯƠNG TÁC (DDI):</span><br>
+                            <span style="font-size: 0.85rem;">Phát hiện độc tính tích lũy trên cơ tim. Cần đánh giá phân suất tống máu (LVEF) trước và sau truyền dịch.</span>
                         </div>
                     </div>
                     
                     <div class="col-md-6">
-                        <h6 class="fw-bold text-success">Liệu pháp Nội tiết (Lành/Tiền ung thư)</h6>
-                        <ul style="font-size: 0.9rem;">
-                            <li><b>Cơ chế:</b> Sử dụng thuốc ức chế Aromatase (Letrozole, Anastrozole) giảm chuyển hóa androgen thành estrogen.</li>
-                            <li><b>Dược động học:</b> Thuốc hấp thu tốt qua đường tiêu hóa, thử nghiệm độ hòa tan (Dissolution test) tại pH dạ dày đạt chuẩn.</li>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="fs-4">🌿</span> <h6 class="fw-bold text-success m-0 fs-5">Liệu Pháp Nội Tiết Phục Hồi</h6>
+                        </div>
+                        <ul style="font-size: 0.95rem; line-height: 1.8; color: var(--text-main);">
+                            <li><b>Cơ chế chẹn Enzyme:</b> Ức chế Aromatase ngăn chặn quá trình chuyển hóa ngoại vi thành Estrogen ở bệnh nhân mãn kinh.</li>
+                            <li><b>Kiểm soát Dược động học:</b> Đánh giá tốc độ giải phóng dược chất (Dissolution Profile) để đảm bảo nồng độ đỉnh trong máu.</li>
                         </ul>
                     </div>
                 </div>
@@ -237,32 +286,35 @@
     </div>
 
     <script>
-        // --- CHẾ ĐỘ NỀN TỐI (DARK MODE) ---
+        // --- 1. ĐỒNG HỒ REAL-TIME ---
+        function updateClock() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Ho_Chi_Minh', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const dateStr = now.toLocaleDateString('vi-VN');
+            const timeStr = now.toLocaleTimeString('vi-VN', options);
+            document.getElementById('liveClock').innerHTML = `Đà Nẵng, ${dateStr} - <span style="color: #ff3366;">${timeStr}</span>`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- 2. DARK/LIGHT MODE ---
         function toggleTheme() {
             const html = document.documentElement;
             const btn = document.getElementById('themeBtn');
             if (html.getAttribute('data-theme') === 'light') {
-                html.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '☀️ Light Mode';
+                html.setAttribute('data-theme', 'dark'); btn.innerHTML = '☀️ Light Mode';
             } else {
-                html.setAttribute('data-theme', 'light');
-                btn.innerHTML = '🌙 Lab Mode';
+                html.setAttribute('data-theme', 'light'); btn.innerHTML = '🌙 Lab Mode';
             }
         }
 
-        // --- XUẤT FILE PDF ---
+        // --- 3. XUẤT PDF ---
         function exportPDF() {
             const element = document.getElementById('coa-report');
-            const opt = {
-                margin: 0.3, filename: 'Phieu_Kiem_Nghiem_COA.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
-            };
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set({ margin: 0.3, filename: 'COA_Vesicar.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } }).from(element).save();
         }
 
-        // --- HỆ THỐNG TAB ---
+        // --- 4. TAB NAVIGATION ---
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.his-nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -270,13 +322,13 @@
             document.getElementById(tabId).classList.add('active');
         }
 
-        // --- LOGIC MẪU & GỬI DỮ LIỆU ---
+        // --- 5. LOGIC AI & ANIMATIONS ---
         const featureNames = {{ feature_names | tojson }};
         const sampleMalignant = [17.99, 10.38, 122.8, 1001.0, 0.1184, 0.2776, 0.3001, 0.1471, 0.2419, 0.07871, 1.095, 0.9053, 8.589, 153.4, 0.006399, 0.04904, 0.05373, 0.01587, 0.03003, 0.006193, 25.38, 17.33, 184.6, 2019.0, 0.1622, 0.6656, 0.7119, 0.2654, 0.4601, 0.1189];
         
         function generateRandomSample() {
             featureNames.forEach((feat, i) => {
-                let randomNoise = sampleMalignant[i] * (0.8 + Math.random() * 0.4);
+                let randomNoise = sampleMalignant[i] * (0.85 + Math.random() * 0.3);
                 document.getElementById(feat).value = randomNoise.toFixed(4);
             });
         }
@@ -288,37 +340,51 @@
             radarInstance = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['Radius', 'Texture', 'Perimeter', 'Area', 'Smoothness'],
-                    datasets: [{ data: dataArray, backgroundColor: color+'40', borderColor: color, borderWidth: 2 }]
+                    labels: ['Bán kính', 'Độ nhám', 'Chu vi', 'Diện tích', 'Độ mịn'],
+                    datasets: [{ data: dataArray, backgroundColor: color+'30', borderColor: color, borderWidth: 3, pointBackgroundColor: '#fff', pointBorderColor: color, pointRadius: 4 }]
                 },
-                options: { 
-                    scales: { r: { ticks: { display: false }, grid: { color: 'rgba(128,128,128,0.2)' } } }, 
-                    plugins: { legend: { display: false } } 
-                }
+                options: { scales: { r: { ticks: { display: false }, grid: { color: 'rgba(128,128,128,0.15)' }, angleLines: { color: 'rgba(128,128,128,0.15)' } } }, plugins: { legend: { display: false } } }
             });
+        }
+
+        // Hiệu ứng đếm số chạy từ 0 đến giá trị thực
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = (progress * (end - start) + start).toFixed(2) + "%";
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
         }
 
         document.getElementById('predictForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const resultContainer = document.getElementById('resultContainer');
+            const inputCard = document.getElementById('inputCard');
             
-            // Hiệu ứng Loading DNA
+            // Kích hoạt Laser Quét và Khóa nút
+            inputCard.classList.add('scanning');
             btn.disabled = true;
             document.getElementById('pdfBtn').classList.add('d-none');
+            
+            // Hiệu ứng DNA
             resultContainer.innerHTML = `
                 <div class="col-12">
                     <div class="dna-loader">
                         <div class="dna-strand"></div><div class="dna-strand"></div>
                         <div class="dna-strand"></div><div class="dna-strand"></div><div class="dna-strand"></div>
                     </div>
-                    <p class="text-center mt-3 fw-bold" style="color: var(--med-secondary);">Đang giải mã cấu trúc học...</p>
+                    <p class="text-center mt-4 fw-bold" style="color: var(--med-primary); letter-spacing: 1px;">Mắt thần đang bóc tách không gian đa chiều...</p>
                 </div>
             `;
 
             let features = {};
             featureNames.forEach(feat => { features[feat] = parseFloat(document.getElementById(feat).value); });
 
+            // Giả lập thời gian máy phân tích 1.8s
             setTimeout(async () => {
                 try {
                     const response = await fetch('/predict', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ features: features }) });
@@ -326,44 +392,54 @@
                     
                     if (response.ok) {
                         let isMalignant = data.predicted_class === 0;
-                        let color = isMalignant ? '#ff4d4d' : '#20c997';
-                        let label = isMalignant ? 'ÁC TÍNH' : 'LÀNH TÍNH';
+                        let color = isMalignant ? '#ff3366' : '#10b981';
+                        let label = isMalignant ? 'CẢNH BÁO ÁC TÍNH' : 'CẤU TRÚC LÀNH TÍNH';
                         let confidence = (Math.max(data.probability_malignant, data.probability_benign) * 100).toFixed(2);
+                        let refID = `COA-${Math.floor(Math.random()*90000) + 10000}`;
                         
-                        document.getElementById('qcStatus').innerHTML = `<span class="badge" style="background:${color};">Đã hoàn tất</span>`;
-                        document.getElementById('pdfBtn').classList.remove('d-none'); // Hiện nút PDF
+                        document.getElementById('qcStatus').innerHTML = `<span class="badge" style="background:${color}; color:#fff; font-size:0.85rem;">Phân Tích Hoàn Tất</span>`;
+                        document.getElementById('pdfBtn').classList.remove('d-none');
+                        inputCard.classList.remove('scanning'); // Tắt Laser
 
+                        // Cấu trúc kết quả
                         resultContainer.innerHTML = `
                             <div class="col-md-6 px-4 text-start">
-                                <h6 class="fw-bold text-muted mb-1">Mã tham chiếu: COA-${Math.floor(Math.random()*10000)}</h6>
-                                <h2 style="color: ${color}; font-weight: 900;">${label}</h2>
-                                <p style="font-size: 0.85rem; margin-top: 15px;">Phân tích thông qua biến đổi véc-tơ không gian (SVM). Kết quả cho thấy tỷ lệ bất thường cấu trúc tương thích với bệnh lý.</p>
-                                <div class="d-flex justify-content-between mt-3 mb-1 fw-bold" style="font-size: 0.9rem;">
-                                    <span>Độ tin cậy:</span><span style="color: ${color};">${confidence}%</span>
+                                <h6 class="fw-bold mb-2" style="color: #64748b; font-size: 0.8rem; letter-spacing: 1px;">MÃ THAM CHIẾU: ${refID}</h6>
+                                <h2 style="color: ${color}; font-weight: 900; letter-spacing: -1px; text-shadow: 0 4px 10px ${color}40;">${label}</h2>
+                                <p style="font-size: 0.85rem; margin-top: 15px; color: var(--text-main); opacity: 0.9;">Hệ thống học máy SVM đã ánh xạ 30 chiều dữ liệu. Cấu trúc tế bào có biểu hiện tương thích mật thiết với mẫu tham chiếu lâm sàng.</p>
+                                
+                                <div class="d-flex justify-content-between mt-4 mb-1 fw-bold" style="font-size: 0.9rem;">
+                                    <span style="text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Độ hội tụ AI:</span>
+                                    <span id="confValue" style="color: ${color}; font-size: 1.1rem;">0.00%</span>
                                 </div>
-                                <div class="progress" style="height: 8px; background: rgba(128,128,128,0.2);">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: ${confidence}%; background-color: ${color};"></div>
+                                <div class="progress" style="height: 6px; background: rgba(128,128,128,0.1); border-radius: 10px; overflow: hidden;">
+                                    <div class="progress-bar" style="width: 0%; background: ${color}; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);" id="confBar"></div>
                                 </div>
                             </div>
-                            <div class="col-md-6"><canvas id="radarChart" width="100" height="100"></canvas></div>
+                            <div class="col-md-6" id="radarContainer"><canvas id="radarChart" width="100" height="100"></canvas></div>
                         `;
                         
+                        // Kích hoạt animation chạy số
+                        animateValue(document.getElementById("confValue"), 0, parseFloat(confidence), 1500);
+                        setTimeout(() => { document.getElementById("confBar").style.width = confidence + "%"; }, 50);
+
                         let radarData = [features[featureNames[0]], features[featureNames[1]], features[featureNames[2]]/10, features[featureNames[3]]/100, features[featureNames[4]]*100];
                         initRadar(radarData, color);
 
-                        // Ghi log lịch sử
-                        const time = new Date().toLocaleTimeString();
+                        // Ghi log
+                        const time = new Date().toLocaleTimeString('vi-VN', {hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'});
                         document.getElementById('historyTableBody').insertAdjacentHTML('afterbegin', `
-                            <tr style="border-bottom: 1px solid var(--border-color);">
-                                <td class="text-muted">${time}</td>
+                            <tr style="border-bottom: 1px dashed var(--border-color); animation: fadeUp 0.5s;">
+                                <td class="fw-bold" style="color: #64748b;">${refID}</td>
+                                <td style="font-family: monospace;">${time}</td>
                                 <td class="fw-bold" style="color: ${color};">${label}</td>
-                                <td>${confidence}%</td>
+                                <td><span class="badge" style="background: ${color}20; color: ${color};">${confidence}%</span></td>
                             </tr>
                         `);
                     }
-                } catch (e) { alert("Lỗi hệ thống"); }
+                } catch (e) { alert("Lỗi trích xuất máy chủ!"); inputCard.classList.remove('scanning'); }
                 btn.disabled = false;
-            }, 1500); // Tạo độ trễ 1.5s để xem hiệu ứng DNA
+            }, 1800);
         });
     </script>
 </body>
